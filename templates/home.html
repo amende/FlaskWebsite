@@ -3,24 +3,12 @@
 <head>
   <link rel="stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/semantic.css') }}">
 </head>
+
 <body>
 
-  <div class="ui fixed inverted main menu">
-    <a class="item" href="/">
-      Des Timbres
-    </a>
-    <a class="item" href="/login">
-      Connexion
-    </a>
-  </div>
+  {% include "navbar.html" %}
 
-  <!-- <script>
-    $(function(){
-      $("#header").load("navbar.html");
-    });
-  </script> -->
-
-  <div class="pusher" style="padding-top:5em;">
+  <div class="pusher">
 
     <h1>This is a heading</h1>
     <p>This is a paragraph.</p>
