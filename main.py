@@ -1,4 +1,5 @@
 import flask
+import flask_login
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 import os
@@ -19,8 +20,6 @@ def create_app():
 
     # Load environment variables
     load_dotenv()
-
-
 
 
     @app.route('/')
@@ -46,7 +45,7 @@ def create_app():
     @app.route('/login')
     def login():
         return flask.render_template('login.html')
-    
+
     return(app)
 
 
