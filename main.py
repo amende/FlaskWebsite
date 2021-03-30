@@ -18,9 +18,16 @@ if os.getenv("debug"):
     db.drop_all()
     db.create_all()
 
+
 @app.route('/')
-def hello_world():
-    return 'Hello World !'
+def home():
+    return flask.render_template('home.html')
+
+
+@app.route('/login')
+def login():
+    return flask.render_template('login.html')
+
 
 if __name__ == '__main__':
     app.run(debug=os.getenv("debug"))
