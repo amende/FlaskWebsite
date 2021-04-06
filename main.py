@@ -133,13 +133,13 @@ def ajoutTimbre():
                 filePath=url_for('static',filename='images/logo.png')
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
-                filePath=os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                filePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 file.save(filePath)
         #en bdd
         nom = request.form.get('name')
         annee = request.form.get('date')
         owner = current_user.id
-        echangeable = request.form.get('echangeable')=='on'
+        echangeable = request.form.get('echangeable') == 'on'
         new_timbre = Timbre(nom=nom, annee=annee, owner=owner,echangeable=echangeable,filePath=filePath)
         db.session.add(new_timbre)
         db.session.commit()
@@ -151,22 +151,27 @@ def ajoutTimbre():
 @login_required
 def searchStamp():
     if request.method == 'GET':
-        timbres = Timbre.query.all()
+        timbres = Timbre.query.filter_by(echangeable=True)
         return(render_template("search.html", timbres=timbres))
     if request.method == 'POST':
         min_year = request.form.get('min_year')
-        if min_year is None:
+        if min_year == "":
             min_year = 0
 
         max_year = request.form.get('max_year')
-        if max_year is None:
+        if max_year == "":
             max_year = 3000
 
         name = request.form.get('name')
         if name is None:
             name = ""
 
-        timbres = Timbre.query.filter_by(Timbre.annee > min_year, Timbre.annee < max_year, name in Timbre.nom).all()
+        print(min_year)
+        print(max_year)
+        print(name)
+
+        timbres = Timbre.query.filter(Timbre.nom.ilike(name), Timbre.annee >= min_year, Timbre.annee <= max_year)\
+                              .filter_by(echangeable=True).all()
         return(render_template("search.html", timbres=timbres))
 
 

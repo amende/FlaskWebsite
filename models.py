@@ -18,4 +18,4 @@ class Timbre(db.Model):
     nom = db.Column(db.String(100))
     annee = db.Column(db.Integer)
     echangeable = db.Column(db.Boolean)
-    filePath=db.Column(db.String(150))
+    filePath = db.Column(db.String(150))

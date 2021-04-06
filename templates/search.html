@@ -7,6 +7,23 @@
   {% include "navbar.html" %}
   {% include "errors.html" %}
 
+<form class="ui form" action="/searchStamp" method='POST'>
+  <div class="equal width fields">
+    <div class="field">
+      <label>Minimum year</label>
+      <input name="min_year" type="text" placeholder="Min. Year">
+    </div>
+    <div class="field">
+      <label>Maximum year</label>
+      <input name="max_year" type="text" placeholder="Max. Year">
+    </div>
+    <div class="field">
+      <label>Name contains</label>
+      <input name="name" type="text" placeholder="Name contains">
+    </div>
+    <button class="ui orange submit button" type="submit">Search</button>
+  </div>
+</form>
 
   <div class="ui divided items">
 
