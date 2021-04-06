@@ -13,7 +13,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("db_uri")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Database initialisation
-db.init_app(app)
+db.init_app(db)
 
 # Just for easier debug
 if os.getenv("debug"):
@@ -28,27 +28,22 @@ login_manager.init_app(app)
 # Load environment variables
 load_dotenv()
 
-
 @app.route('/')
 def home():
     return flask.render_template('home.html')
-
 
 @login_required
 @app.route('/profile')
 def profile():
     return flask.render_template('notYet.html')
 
-
 @app.route('/signup')
 def signup():
     return flask.render_template('notYet.html')
 
-
 @app.route('/logout')
 def logout():
     return flask.render_template('notYet.html')
-
 
 @app.route('/login')
 def login():
