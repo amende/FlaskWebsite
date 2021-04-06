@@ -3,9 +3,10 @@ from flask_login import LoginManager, login_required, login_user, logout_user, c
 from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
 import os
+import datetime
 
 # local files:
-from models import User, Timbre, db
+from models import User, Timbre, db, Message
 
 
 # Load environment variables
@@ -169,6 +170,48 @@ def searchStamp():
         timbres = Timbre.query.filter_by(Timbre.annee > min_year, Timbre.annee < max_year, name in Timbre.nom).all()
         return(render_template("search.html", timbres=timbres))
 
+# Message
+@app.route('/messaging', methods=['GET', 'POST'])
+@login_required
+def messaging():
+
+    if request.method == 'POST' :
+        timestamp = datetime.datetime.now()
+        sender = current_user.id
+        receiver = User.query.filter_by(name=request.form.get('receiver')).first().id
+        content = request.form.get('content')
+        seen = False
+        new_message = Message(timestamp=timestamp,sender=sender,receiver=receiver,content=content,seen=seen)
+        db.session.add(new_message)
+        db.session.commit()
+        messages = Message.query.filter_by(receiver = current_user.id)
+    
+    #Getting received messages
+    messagesReceivedQuery = Message.query.filter_by(receiver = current_user.id)
+    messagesReceived = []
+
+    for message in messagesReceivedQuery :
+        date = message.timestamp
+        sender = User.query.filter_by(id=message.sender).first().name
+        content = message.content
+        seen = message.seen
+        messagesReceived.append({"date" : date,"sender" : sender, "content" : content,"seen" : seen})
+    
+    #Getting sent messages
+    messagesSentQuery = Message.query.filter_by(sender = current_user.id)
+    messagesSent = []
+
+    for message in messagesSentQuery :
+        date = message.timestamp
+        receiver = User.query.filter_by(id=message.receiver).first().name
+        content = message.content
+        seen = message.seen
+        messagesSent.append({"date" : date,"receiver" : receiver, "content" : content,"seen" : seen})
+    
+    
+    
+        
+    return(render_template("messaging.html",messagesReceived=messagesReceived,messagesSent=messagesSent))
 
 # Start development web server
 if __name__ == '__main__':

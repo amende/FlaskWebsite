@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {% include "header.html" %}
+</head>
+<body>
+  {% include "navbar.html" %}
+  {% include "errors.html" %}
+  <form class="ui form" action="/messaging" method='POST' style="width: 500px;">
+    <div class="field">
+      <label>Uname of receiver</label>
+      <input type="text" name="receiver" placeholder="receiver">
+    </div>
+    <div class="field">
+      <label>Content of message</label>
+      <input type="text" name="content" placeholder="content">
+    </div>
+    <button class="ui blue submit button" type="submit">Send</button>
+  </form>
+  <h1>
+    Messages received
+  </h1>
+  <table>
+      <tr>
+          <td>Date</td>
+          <td>From</td>
+          <td>Content</td>
+          <td>Seen</td>
+      </tr>
+    {% for message in messagesReceived %}
+    <tr>
+        <td>{{ message["date"] }}</td>
+        <td>{{ message["sender"] }}</td>
+        <td>{{ message["content"] }}</td>
+        <td>{{ message["seen"] }}</td>
+    </tr>
+    {% endfor %}
+  </table>    
+  <h1>
+    Messages sent
+  </h1>
+  <table>
+      <tr>
+          <td>Date</td>
+          <td>To</td>
+          <td>Content</td>
+          <td>Seen</td>
+      </tr>
+    {% for message in messagesSent %}
+    <tr>
+        <td>{{ message["date"] }}</td>
+        <td>{{ message["receiver"] }}</td>
+        <td>{{ message["content"] }}</td>
+        <td>{{ message["seen"] }}</td>
+    </tr>
+    {% endfor %}
+  </table>  
+  {% include "footer.html" %}
+</body>
+</html>

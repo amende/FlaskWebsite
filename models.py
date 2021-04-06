@@ -19,3 +19,11 @@ class Timbre(db.Model):
     annee = db.Column(db.Integer)
     echangeable = db.Column(db.Boolean)
     filePath=db.Column(db.String(150))
+
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    timestamp = db.Column(db.DateTime)
+    sender = db.Column(db.Integer, db.ForeignKey('user.id'))
+    receiver = db.Column(db.Integer, db.ForeignKey('user.id'))
+    content = db.Column(db.String(140))
+    seen = db.Column(db.Boolean)
