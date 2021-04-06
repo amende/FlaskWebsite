@@ -86,6 +86,36 @@ def logout():
     return render_template('home.html')
 
 
+@app.route('/editProfile', methods=['POST'])
+@login_required
+def editProfile():
+    notif_success = False
+
+    email = request.form.get('email')
+    if email != "":
+        current_user.email = email
+        notif_success = True
+
+    password = request.form.get('password')
+    if password != "":
+        current_user.password = password
+        notif_success = True
+
+    if notif_success:
+        flash("Successfully edited profile")
+
+    return render_template('profile.html')
+
+
+@app.route('/deleteProfile')
+@login_required
+def deleteProfile():
+    User.query.get(current_user.id).delete()
+    db.session.commit()
+    logout_user()
+    return render_template('home.html')
+
+
 @app.route('/login')
 def login():
     return render_template('login.html')
