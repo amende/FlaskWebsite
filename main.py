@@ -135,12 +135,12 @@ def ajoutTimbre():
                 filename = secure_filename(file.filename)
                 filePath=os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 file.save(filePath)
-
         #en bdd
         nom = request.form.get('name')
         annee = request.form.get('date')
         owner = current_user.id
-        new_timbre = Timbre(nom=nom, annee=annee, owner=owner)
+        echangeable = request.form.get('echangeable')=='on'
+        new_timbre = Timbre(nom=nom, annee=annee, owner=owner,echangeable=echangeable,filePath=filePath)
         db.session.add(new_timbre)
         db.session.commit()
         return(redirect(url_for("maCollec")))
