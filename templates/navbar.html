@@ -5,26 +5,26 @@
     </a>
     {% if current_user.is_anonymous %}
     <a class="item" href="/login">
-      Connexion
+      Log in
     </a>
     <a class="item" href="/signup">
-      S'inscrire
+      Sign up
     </a>
     {% else %}
-    <a class="item" href="/logout">
-      Déconnexion
+    <a class="item" href="/profile">
+      Profile
     </a>
     <a class="item" href="/maCollec">
-      Ma Collection
-    </a>
-    <a class="item" href="/profile">
-      Profil
+      My collection
     </a>
     <a class="item" href="/searchStamp">
-      Rechercher
+      Search
     </a>
     <a class="item" href="/messaging">
       Messaging
+    </a>
+    <a class="item" href="/logout">
+      Log out
     </a>
     {% endif %}
   </div>
