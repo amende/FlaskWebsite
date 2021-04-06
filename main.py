@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from dotenv import load_dotenv
+from werkzeug.utils import secure_filename
 import os
 
 # local files:
@@ -16,6 +17,13 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv("secret_key")
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("db_uri")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+##gestion des upload images des timbres
+app.config['UPLOAD_FOLDER'] = os.getenv('UPLOAD_FOLDER')
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 # Database initialisation
 db.init_app(app)
 
@@ -116,6 +124,19 @@ def ajoutTimbre():
     if request.method == 'GET':
         return(render_template("addTimbre.html"))
     if request.method == 'POST':
+        #gestion de l'image
+        if 'file' not in request.files:
+            filePath=url_for('static',filename='images/logo.png')
+        else:
+            file = request.files['file']
+            if file.filename == '':
+                filePath=url_for('static',filename='images/logo.png')
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                filePath=os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(filePath)
+
+        #en bdd
         nom = request.form.get('name')
         annee = request.form.get('date')
         owner = current_user.id
