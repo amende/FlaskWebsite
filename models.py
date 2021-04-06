@@ -18,8 +18,8 @@ class Timbre(db.Model):
     nom = db.Column(db.String(100))
     annee = db.Column(db.Integer)
     echangeable = db.Column(db.Boolean)
-<<<<<<< HEAD
-    filePath=db.Column(db.String(150))
+    fileName = db.Column(db.String(150))
+
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -28,6 +28,3 @@ class Message(db.Model):
     receiver = db.Column(db.Integer, db.ForeignKey('user.id'))
     content = db.Column(db.String(140))
     seen = db.Column(db.Boolean)
-=======
-    fileName=db.Column(db.String(150))
->>>>>>> a399564c04b043f40868a3c9af2b29f1ae03c4bd
