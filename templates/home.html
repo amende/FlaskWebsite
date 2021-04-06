@@ -8,11 +8,65 @@
 
   {% include "navbar.html" %}
   {% include "errors.html" %}
-  <div class="row">
-    <div class="ui large message">
-      <h1 class="ui huge header">Le site du parfait philatéliste</h1>
-      <p>Venez échanger vos timbres et gérer votre collection sur notre site !</p>
-      <a href="/login" class="ui blue button">Connexion</a>
+  <div class="ui two column centered grid">
+    <div class="row">
+      <div class="ui large message">
+        <h1 class="ui huge header">Le site du parfait philatéliste</h1>
+        <p>Venez échanger vos timbres et gérer votre collection sur notre site !</p>
+        <a href="/login">
+          <div class="ui animated fade blue button" href="/login">
+            <div class="visible content">Commencer maintenant</div>
+            <div class="hidden content">
+              Connexion
+            </div>
+          </div>
+        </a>
+        <br/>
+        <br/>
+        <h3 class="ui header" style="text-align: left;">Une communanuté très active !</h3>
+        <div class="ui horizontal statistics">
+          <div class="statistic">
+            <div class="value">
+              <i class="trophy icon"></i>
+              22
+            </div>
+            <div class="label">
+              Prix internationaux
+            </div>
+          </div>
+          <div class="statistic">
+            <div class="value">
+              <i class="ticket icon"></i>
+              0
+            </div>
+            <div class="label">
+              Timbres postés sur notre site
+            </div>
+          </div>
+          <div class="statistic">
+            <div class="value">
+              <i class="protect icon"></i>
+              81
+            </div>
+            <div class="label">
+              Failles de sécurité
+            </div>
+          </div>
+        </div>
+        Et parce que nous sommes des développeurs chaotiques,<br/> voici une icône de chargement qui ne charge rien.
+        <div class="ui segment">
+          <div class="ui active inverted dimmer">
+            <div class="ui large text loader">
+              Loading
+            </div>
+          </div>
+          <br><br>
+          <br><br>
+          <br><br>
+        </div>
+        <br/>
+        Je trouve ça délicieusement frustrant. Et vous ?
+      </div>
     </div>
   </div>
 
