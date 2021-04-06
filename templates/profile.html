@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/semantic.css') }}">
+</head>
+<body>
+  {% include "navbar.html" %}
+  <div class="row">
+    <p>hello, {{current_user.name}}</p>
+  </div>
+  {% include "footer.html" %}
+</body>
+</html>
