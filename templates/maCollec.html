@@ -7,27 +7,32 @@
   {% include "navbar.html" %}
   {% include "errors.html" %}
 
+  <div class="ui two column centered grid" style="margin-top: 2em;">
+    <div class="ui center aligned segment" style="width: content;">
+      <div class="ui divided items">
 
-  <div class="ui divided items">
-
-    {% for timbre in timbres %}
-    <div class="link item">
-      <div class="ui tiny image">
-        <img src="{{ url_for('static', filename=timbre.fileName) }}">
-      </div>
-      <div class="content">
-        <a class="header">{{ timbre.nom }}</a>
-        <div class="description">
-          Un timbre de l'année {{ timbre.annee }}
+        {% for timbre in timbres %}
+        <div class="link item">
+          <div class="ui tiny image">
+            <img src="{{ url_for('static', filename=timbre.fileName) }}">
+          </div>
+          <div class="content">
+            <a class="header">{{ timbre.nom }}</a>
+            <div class="description">
+              Un timbre de l'année {{ timbre.annee }}
+            </div>
+          </div>
         </div>
+        {% endfor %}
+      </div>
+
+      <div class="row">
+        <a href="/ajoutTimbre"><button class="ui teal button">
+          <i class="add icon"></i>
+          Add a stamp
+        </button></a>
       </div>
     </div>
-    {% endfor %}
-
-  </div>
-
-  <div class="row">
-    <a href="/ajoutTimbre">Ajouter un timbre !</a>
   </div>
   {% include "footer.html" %}
 </body>
