@@ -5,14 +5,20 @@
   </head>
 <body>
   {% include "navbar.html" %}
-  <div class="row">
-    <form action="/login" method='POST'>
-      <label for='email'>Email :</label>
-      <input type='text' name='email' />
-      <label for='password'>Password :</label>
-      <input type='password' name='password' />
-      <input type='submit' value='Log in !' />
-  </form>
+  <div class="ui two column centered grid" style="margin-top: 2em;">
+    <div class="ui center aligned segment" style="width: min-content;">
+      <form class="ui form" action="/login" method='POST' style="width: 500px;">
+        <div class="field">
+          <label>Email</label>
+          <input type="text" name="email" placeholder="Email">
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" name="password" placeholder="Password">
+        </div>
+        <button class="ui blue submit button" type="submit">Submit</button>
+      </form>
+    </div>
   </div>
   {% include "footer.html" %}
 </body>
