@@ -3,12 +3,15 @@
     <a class="item" href="/">
       <img src="{{ url_for('static',filename='images/logo.png') }}" style="height:2em; width:2em;">
     </a>
+    {% if current_user.is_anonymous %}
     <a class="item" href="/login">
       Connexion
     </a>
+    {% else %}
     <a class="item" href="/logout">
       Déconnexion
     </a>
+    {% endif %}
     <a class="item" href="/profile">
       Profil
     </a>

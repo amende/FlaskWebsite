@@ -1,7 +1,7 @@
 import flask
 from flask_sqlalchemy import SQLAlchemy
 from flask import render_template, redirect, url_for, request
-from flask_login import LoginManager, login_required, login_user
+from flask_login import LoginManager, login_required, login_user, logout_user
 from dotenv import load_dotenv
 import os
 #local files:
@@ -23,7 +23,7 @@ db.init_app(app)
 # Just for easier debug
 if os.getenv("debug"):
     with app.app_context():
-        db.drop_all()
+        #db.drop_all()
         db.create_all()
 
 
@@ -67,8 +67,10 @@ def signup_post():
     return redirect(url_for("login"))
 
 @app.route('/logout')
+@login_required
 def logout():
-    return render_template('notYet.html')
+    logout_user()
+    return render_template('home.html')
 
 @app.route('/login')
 def login():
