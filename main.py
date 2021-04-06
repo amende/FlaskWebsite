@@ -13,12 +13,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("db_uri")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Database initialisation
-db.init_app(db)
+db.init_app(app)
 
 # Just for easier debug
 if os.getenv("debug"):
-    db.drop_all()
-    db.create_all()
+    with app.app_context():
+        db.drop_all()
+        db.create_all()
 
 # Login manager initialisation
 login_manager = LoginManager()
