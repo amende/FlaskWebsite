@@ -1,19 +1,35 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    {% include "header.html" %}
-  </head>
+<head>
+  {% include "header.html" %}
+</head>
 <body>
   {% include "navbar.html" %}
   {% include "errors.html" %}
-  <div class="row">
-    <form action='/ajoutTimbre', method='POST'>
-        <label for='name'>Nom du timbre :</label>
-        <input type='text' name='name' />
-        <label for='email'>Année d'édition :</label>
-        <input type='text' name='email' />
-        <input type='submit' value='Ajouter' />
-    </form>
+  <div class="ui two column centered grid" style="margin-top: 2em;">
+    <div class="ui center aligned segment" style="width: min-content;">
+      <form class="ui form" action="/ajoutTimbre" method="POST" style="width: 500px;" enctype=multipart/form-data>
+        <div class="field">
+          <label>Name of your stamp</label>
+          <input type="text" name="name" placeholder="Name">
+        </div>
+        <div class="field">
+          <label>Printed on year:</label>
+          <input type="number" name="date" placeholder="year" min="0" max="2050">
+        </div>
+        <div class="field">
+            <label>Photo of your stamp (optional)</label>
+            <input type=file name=file>
+        </div>
+        <div class="field">
+          <div class="ui toggle checkbox">
+            <input type="checkbox" tabindex="0">
+            <label>I want to exchange that stamp</label>
+          </div>
+        </div>
+        <button class="ui blue submit button" type="submit">Submit</button>
+      </form>
+    </div>
   </div>
   {% include "footer.html" %}
 </body>
