@@ -32,7 +32,7 @@ db.init_app(app)
 # Just for easier debug
 if os.getenv("debug"):
     with app.app_context():
-        db.drop_all()
+        # db.drop_all()
         db.create_all()
 
 
@@ -91,6 +91,11 @@ def logout():
 def editProfile():
     notif_success = False
 
+    name = request.form.get('name')
+    if name != "":
+        current_user.name = name
+        notif_success = True
+
     email = request.form.get('email')
     if email != "":
         current_user.email = email
@@ -104,6 +109,7 @@ def editProfile():
     if notif_success:
         flash("Successfully edited profile")
 
+    db.session.commit()
     return render_template('profile.html')
 
 
