@@ -1,18 +1,36 @@
 import flask
 from flask_sqlalchemy import SQLAlchemy
 from flask import render_template, redirect, url_for, request
+from flask_login import LoginManager, login_required
+# from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 import os
 
+from models import User, db
+# Load environment variables
+load_dotenv()
 
 
-
-# App and Database initialisation
+# App initialisation
 app = flask.Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv("secret_key")
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("db_uri")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+# Database initialisation
+db.init_app(app)
+
+# Just for easier debug
+if os.getenv("debug"):
+    with app.app_context():
+        db.drop_all()
+        db.create_all()
+
+# Login manager initialisation
+#login_manager = LoginManager()
+#login_manager.login_view = 'login'
+#login_manager.init_app(app)
+
+
 
 
 class User(db.Model):
@@ -20,15 +38,6 @@ class User(db.Model):
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
     name = db.Column(db.String(1000))
-# Just for easier debug
-if os.getenv("debug"):
-    db.drop_all()
-    db.create_all()
-
-# Load environment variables
-load_dotenv()
-
-
 
 
 @app.route('/')
@@ -71,9 +80,11 @@ def login():
     
 
 
+@app.route('/login')
+def login():
+    return flask.render_template('login.html')
 
 
 # Start development web server
-if __name__=='__main__':
-    app = create_app()
+if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=os.getenv("debug"))
