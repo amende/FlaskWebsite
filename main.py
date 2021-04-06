@@ -1,7 +1,6 @@
-import flask
 from flask_sqlalchemy import SQLAlchemy
 from flask import render_template, redirect, url_for, request
-from flask_login import LoginManager, login_required, login_user, logout_user
+from flask_login import LoginManager, login_required, login_user, logout_user,current_user
 from dotenv import load_dotenv
 import os
 #local files:
@@ -40,12 +39,12 @@ def load_user(id):
 
 @app.route('/')
 def home():
-    return flask.render_template('home.html')
+    return render_template('home.html')
 
 @app.route('/profile')
 @login_required
 def profile():
-    return flask.render_template('profile.html')
+    return render_template('profile.html')
 
 @app.route('/signup')
 def signup():
@@ -74,7 +73,7 @@ def logout():
 
 @app.route('/login')
 def login():
-    return flask.render_template('login.html')
+    return render_template('login.html')
 
 @app.route('/login',methods=['POST'])
 def login_post():
@@ -91,6 +90,15 @@ def login_post():
     else:
         return(render_template('login.html'))
 
+
+#gestion de la collection:
+
+@app.route('/maCollec')
+@login_required
+def maCollec():
+    user=current_user
+    timbres=Timbre.query.filter_by(owner=user.id)
+    return(render_template("maCollec.html"))
 # Start development web server
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=os.getenv("debug"))
