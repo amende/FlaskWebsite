@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    {% include "header.html" %}
-  </head>
+<head>
+  {% include "header.html" %}
+</head>
 <body>
   {% include "navbar.html" %}
+  {% include "errors.html" %}
   <div class="row">
     <p>hello, {{current_user.name }}</p>
   </div>
