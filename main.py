@@ -107,7 +107,7 @@ def login_post():
 def maCollec():
     user = current_user
     timbres = Timbre.query.filter_by(owner=user.id)
-    return(render_template("maCollec.html"))
+    return(render_template("maCollec.html", timbres=timbres))
 
 
 @app.route('/ajoutTimbre', methods=['GET', 'POST'])
