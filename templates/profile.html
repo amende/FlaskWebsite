@@ -6,9 +6,68 @@
 <body>
   {% include "navbar.html" %}
   {% include "errors.html" %}
-  <div class="row">
-    <p>hello, {{current_user.name }}</p>
-  </div>
-  {% include "footer.html" %}
-</body>
-</html>
+  <div class="ui two column centered grid">
+    <div class="ui center aligned segment" style="width: max-content;">
+      <div class="ui large header">Hello, {{current_user.name}}</div>
+      <br/>
+      <div class="ui horizontal divider">So far, you have :</div>
+      <br/>
+        <div class="ui statistic">
+          <div class="label">
+            Stamps uploaded
+          </div>
+          <div class="value">
+            82
+          </div>
+        </div>
+        <div class="ui statistic">
+          <div class="label">
+            Stamps exchanged
+          </div>
+          <div class="value">
+            15
+          </div>
+        </div>
+        <div class="ui statistic">
+          <div class="label">
+            Reputation points
+          </div>
+          <div class="value">
+            26
+          </div>
+        </div>
+        <br/>
+        <br/>
+        <div class="ui horizontal divider">Edit your profile below :</div>
+      </br>
+        <p style="text-align:left;"> Note : leave empty any field to keep as is.</p>
+        <form class="ui form" action="editProfile" method="POST" style="width: 500px;">
+          <div class="field">
+            <label>Username</label>
+            <input type="text" name="name" placeholder="{{current_user.name}}">
+          </div>
+          <div class="field">
+            <label>Email</label>
+            <input type="text" name="email" placeholder="{{current_user.email}}">
+          </div>
+          <div class="field">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Password">
+          </div>
+          <button class="ui gray submit button" type="submit">Edit</button>
+        </form>
+        <br/>
+        <div class="ui horizontal divider">The big red button is here</div>
+        <a href="/deleteProfile">
+          <div class="ui animated fade negative button">
+            <div class="visible content">Delete my profile</div>
+            <div class="hidden content">
+              Sure ?
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+    {% include "footer.html" %}
+  </body>
+  </html>
