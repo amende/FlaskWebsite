@@ -1,0 +1,12 @@
+<div class="ui two column centered grid" style="margin-top: 2em;">
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+<div class="ui error message">
+ <div class="header">Error</div>
+ <p>{{ message }}</p>
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+</div>
