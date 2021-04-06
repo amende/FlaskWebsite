@@ -125,6 +125,30 @@ def ajoutTimbre():
         return(redirect(url_for("maCollec")))
 
 
+# Recherche de timbres
+@app.route('/searchStamp', methods=['GET', 'POST'])
+@login_required
+def searchStamp():
+    if request.method == 'GET':
+        timbres = Timbre.query.all()
+        return(render_template("search.html", timbres=timbres))
+    if request.method == 'POST':
+        min_year = request.form.get('min_year')
+        if min_year is None:
+            min_year = 0
+
+        max_year = request.form.get('max_year')
+        if max_year is None:
+            max_year = 3000
+
+        name = request.form.get('name')
+        if name is None:
+            name = ""
+
+        timbres = Timbre.query.filter_by(Timbre.annee > min_year, Timbre.annee < max_year, name in Timbre.nom).all()
+        return(render_template("search.html", timbres=timbres))
+
+
 # Start development web server
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=os.getenv("debug"))

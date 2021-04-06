@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {% include "header.html" %}
+</head>
+<body>
+  {% include "navbar.html" %}
+  {% include "errors.html" %}
+
+
+  <div class="ui divided items">
+
+    {% for timbre in timbres %}
+    <div class="link item">
+      <div class="ui tiny image">
+        <img src="{{ url_for('static', filename='images/img_wireframe.png') }}">
+      </div>
+      <div class="content">
+        <a class="header">{{ timbre.nom }}</a>
+        <div class="description">
+          Un timbre de l'année {{ timbre.annee }}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+  </div>
+
+  {% include "footer.html" %}
+</body>
+</html>
