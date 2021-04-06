@@ -2,6 +2,8 @@ from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
+import random
+import string
 import os
 import datetime
 
@@ -85,6 +87,42 @@ def logout():
     return render_template('home.html')
 
 
+@app.route('/editProfile', methods=['POST'])
+@login_required
+def editProfile():
+    notif_success = False
+
+    name = request.form.get('name')
+    if name != "":
+        current_user.name = name
+        notif_success = True
+
+    email = request.form.get('email')
+    if email != "":
+        current_user.email = email
+        notif_success = True
+
+    password = request.form.get('password')
+    if password != "":
+        current_user.password = password
+        notif_success = True
+
+    if notif_success:
+        flash("Successfully edited profile")
+
+    db.session.commit()
+    return render_template('profile.html')
+
+
+@app.route('/deleteProfile')
+@login_required
+def deleteProfile():
+    User.query.get(current_user.id).delete()
+    db.session.commit()
+    logout_user()
+    return render_template('home.html')
+
+
 @app.route('/login')
 def login():
     return render_template('login.html')
@@ -125,23 +163,25 @@ def ajoutTimbre():
     if request.method == 'GET':
         return(render_template("addTimbre.html"))
     if request.method == 'POST':
-        #gestion de l'image
+        # gestion de l'image
         if 'file' not in request.files:
-            filePath=url_for('static',filename='images/logo.png')
+            securedFileName = 'images/img_wireframe.png'
         else:
             file = request.files['file']
             if file.filename == '':
-                filePath=url_for('static',filename='images/logo.png')
+                securedFileName = 'images/img_wireframe.png'
             if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                filePath=os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                file.save(filePath)
-        #en bdd
+                letters = string.ascii_lowercase
+                randomName = ''.join(random.choice(letters) for i in range(15))
+                securedFileName = 'images/upload/'+randomName
+                cheminSauvegarde = os.path.join(app.config['UPLOAD_FOLDER'], randomName)
+                file.save(cheminSauvegarde)
+        # en bdd
         nom = request.form.get('name')
         annee = request.form.get('date')
         owner = current_user.id
-        echangeable = request.form.get('echangeable')=='on'
-        new_timbre = Timbre(nom=nom, annee=annee, owner=owner,echangeable=echangeable,filePath=filePath)
+        echangeable = request.form.get('echangeable') == 'on'
+        new_timbre = Timbre(nom=nom, annee=annee, owner=owner, echangeable=echangeable, fileName=securedFileName)
         db.session.add(new_timbre)
         db.session.commit()
         return(redirect(url_for("maCollec")))
@@ -152,22 +192,22 @@ def ajoutTimbre():
 @login_required
 def searchStamp():
     if request.method == 'GET':
-        timbres = Timbre.query.all()
+        timbres = Timbre.query.filter_by(echangeable=True).limit(50)
         return(render_template("search.html", timbres=timbres))
     if request.method == 'POST':
         min_year = request.form.get('min_year')
-        if min_year is None:
+        if min_year == "":
             min_year = 0
 
         max_year = request.form.get('max_year')
-        if max_year is None:
+        if max_year == "":
             max_year = 3000
 
         name = request.form.get('name')
-        if name is None:
-            name = ""
 
-        timbres = Timbre.query.filter_by(Timbre.annee > min_year, Timbre.annee < max_year, name in Timbre.nom).all()
+        timbres = Timbre.query.filter(Timbre.nom.ilike('%'+name+'%'))   \
+                              .filter(Timbre.annee >= min_year, Timbre.annee <= max_year)   \
+                              .filter_by(echangeable=True).limit(50)
         return(render_template("search.html", timbres=timbres))
 
 # Message

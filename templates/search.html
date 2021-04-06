@@ -7,23 +7,45 @@
   {% include "navbar.html" %}
   {% include "errors.html" %}
 
+  <div class="ui two column centered grid" style="margin-top: 2em;">
+    <div class="ui center aligned segment" style="width: content;">
+      <form class="ui form" action="/searchStamp" method='POST'>
+        <div class="equal width fields">
+          <div class="field">
+            <label>Minimum year</label>
+            <input name="min_year" type="text" placeholder="Min. Year">
+          </div>
+          <div class="field">
+            <label>Maximum year</label>
+            <input name="max_year" type="text" placeholder="Max. Year">
+          </div>
+          <div class="field">
+            <label>Name contains</label>
+            <input name="name" type="text" placeholder="Name contains">
+          </div>
+          </div>
+          <div class="ui horizontal divider">
+          <button class="ui orange submit button" type="submit">Search</button>
+          </div>
+      </form>
 
-  <div class="ui divided items">
+      <div class="ui divided items">
 
-    {% for timbre in timbres %}
-    <div class="link item">
-      <div class="ui tiny image">
-        <img src="{{ url_for('static', filename='images/img_wireframe.png') }}">
-      </div>
-      <div class="content">
-        <a class="header">{{ timbre.nom }}</a>
-        <div class="description">
-          Un timbre de l'année {{ timbre.annee }}
+        {% for timbre in timbres %}
+        <div class="link item">
+          <div class="ui tiny image">
+            <img src="{{ url_for('static', filename=timbre.fileName) }}">
+          </div>
+          <div class="content">
+            <a class="header">{{ timbre.nom }}</a>
+            <div class="description">
+              Un timbre de l'année {{ timbre.annee }}
+            </div>
+          </div>
         </div>
+        {% endfor %}
       </div>
     </div>
-    {% endfor %}
-
   </div>
 
   {% include "footer.html" %}
