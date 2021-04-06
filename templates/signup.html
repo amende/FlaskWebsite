@@ -1,21 +1,35 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    {% include "header.html" %}
-  </head>
+<head>
+  {% include "header.html" %}
+</head>
 <body>
   {% include "navbar.html" %}
-  <div class="row">
-    <form action='/signup', method='POST'>
-        <label for='name'>Name :</label>
-        <input type='text' name='name' />
-        <label for='email'>Email :</label>
-        <input type='text' name='email' />
-        <label for='password'>Password :</label>
-        <input type='password' name='password' />
-        <input type='submit' value='Log in !' />
-    </form>
+
+  <div class="ui two column centered grid" style="margin-top: 2em;">
+    <div class="ui center aligned segment" style="width: min-content;">
+      <form class="ui form" action="signup" method="POST" style="width: 500px;">
+        <div class="field">
+          <label>Username</label>
+          <input type="text" name="name" placeholder="Name">
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="text" name="email" placeholder="Email">
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" name="password" placeholder="Password">
+        </div>
+        <div class="required field">
+          <div class="ui toggle checkbox">
+            <input type="checkbox" tabindex="0">
+            <label>I agree to the Terms and Conditions</label>
+          </div>
+        </div>
+        <button class="ui blue submit button" type="submit">Submit</button>
+      </form>
+    </div>
   </div>
-  {% include "footer.html" %}
 </body>
 </html>
