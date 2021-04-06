@@ -11,4 +11,9 @@ class User(UserMixin,db.Model):
     password = db.Column(db.String(100))
     name = db.Column(db.String(1000))
 
+class Timbre(db.Model):
+    id=db.Column(db.Integer,primary_key=True)
+    owner=db.Column(db.Integer, db.ForeignKey('user.id'))
+    nom=db.Column(db.String(100))
+    annee=db.Column(db.String(10))
 

@@ -1,10 +1,10 @@
 from flask_sqlalchemy import SQLAlchemy
-from flask import render_template, redirect, url_for, request
+from flask import Flask,render_template, redirect, url_for, request
 from flask_login import LoginManager, login_required, login_user, logout_user,current_user
 from dotenv import load_dotenv
 import os
 #local files:
-from models import User, db
+from models import User,Timbre, db
 
 
 # Load environment variables
@@ -12,7 +12,7 @@ load_dotenv()
 
 
 # App initialisation
-app = flask.Flask(__name__)
+app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv("secret_key")
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("db_uri")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -99,6 +99,21 @@ def maCollec():
     user=current_user
     timbres=Timbre.query.filter_by(owner=user.id)
     return(render_template("maCollec.html"))
+
+@app.route('/ajoutTimbre',methods=['GET','POST'])
+@login_required
+def ajoutTimbre():
+    if request.method=='GET':
+        return(render_template("addTimbre.html"))
+    if request.method=='POST':
+        nom=request.form.get('name')
+        annee=request.form.get('date')
+        owner=current_user.id
+        new_timbre=Timbre(nom=nom,annee=annee,owner=owner)
+        db.session.add(new_timbre)
+        db.session.commit()
+        return(redirect(url_for("maCollec")))
+
 # Start development web server
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=os.getenv("debug"))

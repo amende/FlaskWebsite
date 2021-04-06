@@ -6,14 +6,12 @@
 <body>
   {% include "navbar.html" %}
   <div class="row">
-    <form action='/signup', method='POST'>
-        <label for='name'>Name :</label>
+    <form action='/ajoutTimbre', method='POST'>
+        <label for='name'>Nom du timbre :</label>
         <input type='text' name='name' />
-        <label for='email'>Email :</label>
+        <label for='email'>Année d'édition :</label>
         <input type='text' name='email' />
-        <label for='password'>Password :</label>
-        <input type='password' name='password' />
-        <input type='submit' value='Log in !' />
+        <input type='submit' value='Ajouter' />
     </form>
   </div>
   {% include "footer.html" %}
