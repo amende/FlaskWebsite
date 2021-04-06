@@ -162,25 +162,25 @@ def ajoutTimbre():
     if request.method == 'GET':
         return(render_template("addTimbre.html"))
     if request.method == 'POST':
-        #gestion de l'image
+        # gestion de l'image
         if 'file' not in request.files:
-            securedFileName='images/img_wireframe.png'
+            securedFileName = 'images/img_wireframe.png'
         else:
             file = request.files['file']
             if file.filename == '':
-                securedFileName='images/img_wireframe.png'
+                securedFileName = 'images/img_wireframe.png'
             if file and allowed_file(file.filename):
                 letters = string.ascii_lowercase
-                randomName=''.join(random.choice(letters) for i in range(15))
-                securedFileName='images/upload/'+randomName
-                cheminSauvegarde=os.path.join(app.config['UPLOAD_FOLDER'], randomName)
+                randomName = ''.join(random.choice(letters) for i in range(15))
+                securedFileName = 'images/upload/'+randomName
+                cheminSauvegarde = os.path.join(app.config['UPLOAD_FOLDER'], randomName)
                 file.save(cheminSauvegarde)
-        #en bdd
+        # en bdd
         nom = request.form.get('name')
         annee = request.form.get('date')
         owner = current_user.id
         echangeable = request.form.get('echangeable') == 'on'
-        new_timbre = Timbre(nom=nom, annee=annee, owner=owner,echangeable=echangeable,fileName=securedFileName)
+        new_timbre = Timbre(nom=nom, annee=annee, owner=owner, echangeable=echangeable, fileName=securedFileName)
         db.session.add(new_timbre)
         db.session.commit()
         return(redirect(url_for("maCollec")))
@@ -191,7 +191,7 @@ def ajoutTimbre():
 @login_required
 def searchStamp():
     if request.method == 'GET':
-        timbres = Timbre.query.filter_by(echangeable=True)
+        timbres = Timbre.query.filter_by(echangeable=True).limit(50)
         return(render_template("search.html", timbres=timbres))
     if request.method == 'POST':
         min_year = request.form.get('min_year')
@@ -203,15 +203,10 @@ def searchStamp():
             max_year = 3000
 
         name = request.form.get('name')
-        if name is None:
-            name = ""
 
-        print(min_year)
-        print(max_year)
-        print(name)
-
-        timbres = Timbre.query.filter(Timbre.nom.ilike(name), Timbre.annee >= min_year, Timbre.annee <= max_year)\
-                              .filter_by(echangeable=True).all()
+        timbres = Timbre.query.filter(Timbre.nom.ilike('%'+name+'%'))   \
+                              .filter(Timbre.annee >= min_year, Timbre.annee <= max_year)   \
+                              .filter_by(echangeable=True).limit(50)
         return(render_template("search.html", timbres=timbres))
 
 
