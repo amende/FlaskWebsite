@@ -236,15 +236,22 @@ def messaging():
             db.session.delete(messageToDelete)
             db.session.commit()
 
-        elif request.form.get("action") == "postMessage":
+        if request.form.get("action") == "postMessage":
             timestamp = datetime.datetime.now()
             sender = current_user.id
-            receiver = User.query.filter_by(name=request.form.get('receiver')).first().id
-            content = request.form.get('content')
-            seen = False
-            new_message = Message(timestamp=timestamp, sender=sender, receiver=receiver, content=content, seen=seen)
-            db.session.add(new_message)
-            db.session.commit()
+            receiver = User.query.filter_by(name=request.form.get('receiver')).first()
+            if receiver != None :
+                receiver = receiver.id
+                content = request.form.get('content')
+                if len(content) <= 140 :
+                    seen = False
+                    new_message = Message(timestamp=timestamp, sender=sender, receiver=receiver, content=content, seen=seen)
+                    db.session.add(new_message)
+                    db.session.commit()
+                else :
+                    flash("ERROR ! Message too long.")
+            else :
+                flash("ERROR ! User not found.")
 
     # Getting received messages
     messagesReceivedQuery = Message.query.filter_by(receiver=current_user.id)
@@ -257,7 +264,7 @@ def messaging():
         if not message.seen :
             message.seen = True
             db.session.commit()
-        seen = message.seen
+        seen = "Yes"
         messagesReceived.append({"id" : message.id,"date": date, "sender": sender, "content": content, "seen": seen})
 
     # Getting sent messages
@@ -268,7 +275,10 @@ def messaging():
         date = f"{message.timestamp:%Y/%m/%d %H:%M}"
         receiver = User.query.filter_by(id=message.receiver).first().name
         content = message.content
-        seen = message.seen
+        if message.seen :
+            seen = "Yes"
+        else :
+            seen = "No"
         messagesSent.append({"id" : message.id,"date": date, "receiver": receiver, "content": content, "seen": seen})
 
     return(render_template("messaging.html", messagesReceived=messagesReceived, messagesSent=messagesSent))

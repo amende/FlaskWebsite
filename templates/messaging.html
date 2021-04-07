@@ -6,22 +6,26 @@
 <body>
   {% include "navbar.html" %}
   {% include "errors.html" %}
+  <h1>
+    Send message
+  </h1>
   <form class="ui form" action="/messaging" method='POST' style="width: 500px;">
     <div class="field">
-      <label>Uname of receiver</label>
+      <label>Username of receiver</label>
       <input type="text" name="receiver" placeholder="receiver">
     </div>
     <div class="field">
       <label>Content of message</label>
+      <label>(140 charcaters max.)</label>
       <input type="text" name="content" placeholder="content">
     </div>
     <input type="hidden" name="action" value="postMessage"></input>
-    <button class="ui blue submit button" type="submit">Send</button>
+    <button class="ui blue submit button" type="submit">Send message</button>
   </form>
   <br></br>
   <form action="/messaging" method='POST'>
     <input type="hidden" name="action" value="refresh"></input>
-    <button class="ui blue submit button" type="submit">Refresh</button>
+    <button class="ui blue submit button" type="submit">Refresh message box</button>
   </form>
   <h1>
     Messages received
