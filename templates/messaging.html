@@ -15,7 +15,13 @@
       <label>Content of message</label>
       <input type="text" name="content" placeholder="content">
     </div>
+    <input type="hidden" name="action" value="postMessage"></input>
     <button class="ui blue submit button" type="submit">Send</button>
+  </form>
+  <br></br>
+  <form action="/messaging" method='POST'>
+    <input type="hidden" name="action" value="refresh"></input>
+    <button class="ui blue submit button" type="submit">Refresh</button>
   </form>
   <h1>
     Messages received
@@ -33,6 +39,13 @@
         <td>{{ message["sender"] }}</td>
         <td>{{ message["content"] }}</td>
         <td>{{ message["seen"] }}</td>
+        <td>
+          <form action="/messaging" method='POST'>
+            <input type="hidden" name="action" value="deleteReceived"></input>
+            <input type="hidden" name="idToDelete" value = {{message["id"]}}></input>
+            <input type="submit" name="deleteReceivedButton" value="Delete"></input>
+          </form>
+        </td>
     </tr>
     {% endfor %}
   </table>    

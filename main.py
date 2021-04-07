@@ -230,14 +230,21 @@ def searchStamp():
 def messaging():
 
     if request.method == 'POST':
-        timestamp = datetime.datetime.now()
-        sender = current_user.id
-        receiver = User.query.filter_by(name=request.form.get('receiver')).first().id
-        content = request.form.get('content')
-        seen = False
-        new_message = Message(timestamp=timestamp, sender=sender, receiver=receiver, content=content, seen=seen)
-        db.session.add(new_message)
-        db.session.commit()
+        if request.form.get("action") == "deleteReceived" :
+            idToDelete = request.form.get("idToDelete")
+            messageToDelete = Message.query.filter_by(id=idToDelete).first()
+            db.session.delete(messageToDelete)
+            db.session.commit()
+
+        elif request.form.get("action") == "postMessage":
+            timestamp = datetime.datetime.now()
+            sender = current_user.id
+            receiver = User.query.filter_by(name=request.form.get('receiver')).first().id
+            content = request.form.get('content')
+            seen = False
+            new_message = Message(timestamp=timestamp, sender=sender, receiver=receiver, content=content, seen=seen)
+            db.session.add(new_message)
+            db.session.commit()
 
     # Getting received messages
     messagesReceivedQuery = Message.query.filter_by(receiver=current_user.id)
@@ -251,7 +258,7 @@ def messaging():
             message.seen = True
             db.session.commit()
         seen = message.seen
-        messagesReceived.append({"date": date, "sender": sender, "content": content, "seen": seen})
+        messagesReceived.append({"id" : message.id,"date": date, "sender": sender, "content": content, "seen": seen})
 
     # Getting sent messages
     messagesSentQuery = Message.query.filter_by(sender=current_user.id)
@@ -262,7 +269,7 @@ def messaging():
         receiver = User.query.filter_by(id=message.receiver).first().name
         content = message.content
         seen = message.seen
-        messagesSent.append({"date": date, "receiver": receiver, "content": content, "seen": seen})
+        messagesSent.append({"id" : message.id,"date": date, "receiver": receiver, "content": content, "seen": seen})
 
     return(render_template("messaging.html", messagesReceived=messagesReceived, messagesSent=messagesSent))
 
