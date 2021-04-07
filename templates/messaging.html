@@ -6,72 +6,76 @@
 <body>
   {% include "navbar.html" %}
   {% include "errors.html" %}
-  <h1>
-    Send message
-  </h1>
-  <form class="ui form" action="/messaging" method='POST' style="width: 500px;">
-    <div class="field">
-      <label>Username of receiver</label>
-      <input type="text" name="receiver" placeholder="receiver">
+  <div class="ui two column centered grid" style="margin-top: 2em;">
+    <div class="ui center aligned segment" style="width: content;">
+      <div class="ui internally celled grid">
+        <div class="row">
+          <div class="eight wide column">
+            <h1>
+              Send message
+            </h1>
+            <form class="ui form" action="/messaging" method='POST' style="width: 500px;">
+              <div class="field">
+                <label>Username of receiver</label>
+                <input type="text" name="receiver" placeholder="receiver">
+              </div>
+              <div class="field">
+                <label>Content of message</label>
+                <label>(140 characters max.)</label>
+                <textarea type="text" name="content" placeholder="content"></textarea>
+              </div>
+              <input type="hidden" name="action" value="postMessage"></input>
+              <button class="ui blue submit button" type="submit"><i class="paper plane icon"></i>Send message</button>
+            </form>
+          </div>
+          <div class="eight wide column">
+
+            <h1>
+              Messages received
+            </h1>
+
+
+            <div class="ui feed">
+              {% for message in messages %}
+              <div class="event">
+                <div class="label">
+                  <i class="pencil icon"></i>
+                </div>
+                <div class="content">
+                  <div class="summary">
+                    <a class="user">
+                      {{ message["sender"] }} à {{ message["receiver"] }} :
+                    </a>
+                    <div class="date">
+                      {{ message["date"] }}
+                    </div>
+                    <br/>
+                    <td>{{ message["content"] }}</td>
+                  </div>
+                </div>
+              </div>
+              <form action="/messaging" method='POST'>
+                <input type="hidden" name="action" value="deleteReceived"></input>
+                <input type="hidden" name="idToDelete" value = {{message["id"]}}></input>
+                <div class="actions">
+                  <a type="submit" name="deleteReceivedButton" value="Delete"></a>
+                </div>
+              </form>
+              <td></td>
+              {% endfor %}
+            </div>
+
+
+            <br></br>
+            <form action="/messaging" method='POST'>
+              <input type="hidden" name="action" value="refresh"></input>
+              <button class="ui orange submit button" type="submit"><i class="retweet icon"></i>Refresh</button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="field">
-      <label>Content of message</label>
-      <label>(140 characters max.)</label>
-      <input type="text" name="content" placeholder="content">
-    </div>
-    <input type="hidden" name="action" value="postMessage"></input>
-    <button class="ui blue submit button" type="submit">Send message</button>
-  </form>
-  <br></br>
-  <form action="/messaging" method='POST'>
-    <input type="hidden" name="action" value="refresh"></input>
-    <button class="ui blue submit button" type="submit">Refresh message box</button>
-  </form>
-  <h1>
-    Messages received
-  </h1>
-  <table>
-      <tr>
-          <td><b>Date</b></td>
-          <td><b>From</b></td>
-          <td><b>Content</b></td>
-          <td><b>Read</b></td>
-      </tr>
-    {% for message in messagesReceived %}
-    <tr>
-        <td>{{ message["date"] }}</td>
-        <td>{{ message["sender"] }}</td>
-        <td>{{ message["content"] }}</td>
-        <td>{{ message["seen"] }}</td>
-        <td>
-          <form action="/messaging" method='POST'>
-            <input type="hidden" name="action" value="deleteReceived"></input>
-            <input type="hidden" name="idToDelete" value = {{message["id"]}}></input>
-            <input type="submit" name="deleteReceivedButton" value="Delete"></input>
-          </form>
-        </td>
-    </tr>
-    {% endfor %}
-  </table>    
-  <h1>
-    Messages sent
-  </h1>
-  <table>
-      <tr>
-        <td><b>Date</b></td>
-        <td><b>To</b></td>
-        <td><b>Content</b></td>
-        <td><b>Read</b></td>
-      </tr>
-    {% for message in messagesSent %}
-    <tr>
-        <td>{{ message["date"] }}</td>
-        <td>{{ message["receiver"] }}</td>
-        <td>{{ message["content"] }}</td>
-        <td>{{ message["seen"] }}</td>
-    </tr>
-    {% endfor %}
-  </table>  
+  </div>
   {% include "footer.html" %}
 </body>
 </html>

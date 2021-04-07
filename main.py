@@ -230,7 +230,7 @@ def searchStamp():
 def messaging():
 
     if request.method == 'POST':
-        if request.form.get("action") == "deleteReceived" :
+        if request.form.get("action") == "deleteReceived":
             idToDelete = request.form.get("idToDelete")
             messageToDelete = Message.query.filter_by(id=idToDelete).first()
             db.session.delete(messageToDelete)
@@ -240,18 +240,19 @@ def messaging():
             timestamp = datetime.datetime.now()
             sender = current_user.id
             receiver = User.query.filter_by(name=request.form.get('receiver')).first()
-            if receiver != None :
+            if receiver is not None:
                 receiver = receiver.id
                 content = request.form.get('content')
-                if len(content) <= 140 :
+                if len(content) <= 140:
                     seen = False
-                    new_message = Message(timestamp=timestamp, sender=sender, receiver=receiver, content=content, seen=seen)
+                    new_message = Message(timestamp=timestamp, sender=sender, receiver=receiver,
+                                          content=content, seen=seen)
                     db.session.add(new_message)
                     db.session.commit()
-                else :
-                    flash("ERROR ! Message too long.")
-            else :
-                flash("ERROR ! User not found.")
+                else:
+                    flash("Message too long.")
+            else:
+                flash("User not found.")
 
     # Getting received messages
     messagesReceivedQuery = Message.query.filter_by(receiver=current_user.id)
@@ -260,12 +261,14 @@ def messaging():
     for message in messagesReceivedQuery:
         date = f"{message.timestamp:%Y/%m/%d %H:%M}"
         sender = User.query.filter_by(id=message.sender).first().name
+        receiver = User.query.filter_by(id=message.receiver).first().name
         content = message.content
-        if not message.seen :
+        if not message.seen:
             message.seen = True
             db.session.commit()
         seen = "Yes"
-        messagesReceived.append({"id" : message.id,"date": date, "sender": sender, "content": content, "seen": seen})
+        messagesReceived.append({"id": message.id, "date": date, "sender": sender, "receiver": receiver,
+                                 "content": content, "seen": seen})
 
     # Getting sent messages
     messagesSentQuery = Message.query.filter_by(sender=current_user.id)
@@ -273,15 +276,20 @@ def messaging():
 
     for message in messagesSentQuery:
         date = f"{message.timestamp:%Y/%m/%d %H:%M}"
+        sender = User.query.filter_by(id=message.sender).first().name
         receiver = User.query.filter_by(id=message.receiver).first().name
         content = message.content
-        if message.seen :
+        if message.seen:
             seen = "Yes"
-        else :
+        else:
             seen = "No"
-        messagesSent.append({"id" : message.id,"date": date, "receiver": receiver, "content": content, "seen": seen})
+        messagesSent.append({"id": message.id, "date": date, "sender": sender, "receiver": receiver,
+                             "content": content, "seen": seen})
 
-    return(render_template("messaging.html", messagesReceived=messagesReceived, messagesSent=messagesSent))
+    messages = messagesReceived+messagesSent
+    messages.sort(key=lambda x: x["date"], reverse=True)
+    return(render_template("messaging.html", messagesReceived=messagesReceived, messagesSent=messagesSent,
+                           messages=messages))
 
 
 # Start development web server
