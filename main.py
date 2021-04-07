@@ -129,7 +129,7 @@ def editProfile():
 @app.route('/deleteProfile')
 @login_required
 def deleteProfile():
-    User.query.get(current_user.id).delete()
+    User.query.filter_by(id=current_user.id).delete()
     db.session.commit()
     logout_user()
     flash("Successfully deleted profile")
