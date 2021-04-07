@@ -244,9 +244,12 @@ def messaging():
     messagesReceived = []
 
     for message in messagesReceivedQuery:
-        date = message.timestamp
+        date = f"{message.timestamp:%Y/%m/%d %H:%M}"
         sender = User.query.filter_by(id=message.sender).first().name
         content = message.content
+        if not message.seen :
+            message.seen = True
+            db.session.commit()
         seen = message.seen
         messagesReceived.append({"date": date, "sender": sender, "content": content, "seen": seen})
 
@@ -255,7 +258,7 @@ def messaging():
     messagesSent = []
 
     for message in messagesSentQuery:
-        date = message.timestamp
+        date = f"{message.timestamp:%Y/%m/%d %H:%M}"
         receiver = User.query.filter_by(id=message.receiver).first().name
         content = message.content
         seen = message.seen
