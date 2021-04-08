@@ -2,8 +2,14 @@
 <html>
 <head>
   {% include "header.html" %}
+  <script src="{{ url_for('static', filename='js/jQuery.js') }}"></script>
+  <script src="{{ url_for('static', filename='styles/components/accordion.js') }}"></script>
 </head>
 <body>
+  <script language='javascript'>
+               $(document).ready(function(){$('.ui.accordion').accordion();});
+  </script>
+
   {% include "navbar.html" %}
   {% include "errors.html" %}
   <div class="ui two column centered grid" style="margin-top: 2em;">
@@ -35,8 +41,15 @@
             </h1>
 
 
+            <div class="ui styled fluid accordion" style="exclusive:false;">
+              <div class="active title">
+                <i class="dropdown icon"></i>
+                New messages
+              </div>
+            <div class="active content">
             <div class="ui feed">
               {% for message in messages %}
+              {% if message.seen == "No" and message.receiver != current_user.id %}
               <div class="event">
                 <div class="label">
                   <i class="pencil icon"></i>
@@ -54,17 +67,43 @@
                   </div>
                 </div>
               </div>
-              <form action="/messaging" method='POST'>
-                <input type="hidden" name="action" value="deleteReceived"></input>
-                <input type="hidden" name="idToDelete" value = {{message["id"]}}></input>
-                <div class="actions">
-                  <a type="submit" name="deleteReceivedButton" value="Delete"></a>
-                </div>
-              </form>
               <td></td>
+              {% endif %}
               {% endfor %}
             </div>
+          </div>
 
+
+              <div class="title">
+                <i class="dropdown icon"></i>
+                Seen messages
+              </div>
+            <div class="content">
+            <div class="ui feed">
+              {% for message in messages %}
+              {% if message.seen == "Yes" or message.receiver == current_user.id %}
+              <div class="event">
+                <div class="label">
+                  <i class="pencil icon"></i>
+                </div>
+                <div class="content">
+                  <div class="summary">
+                    <a class="user">
+                      {{ message["sender"] }} à {{ message["receiver"] }} :
+                    </a>
+                    <div class="date">
+                      {{ message["date"] }}
+                    </div>
+                    <br/>
+                    <td>{{ message["content"] }}</td>
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          </div>
 
             <br></br>
             <form action="/messaging" method='POST'>

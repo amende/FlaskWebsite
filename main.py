@@ -245,12 +245,6 @@ def searchStamp():
 def messaging():
 
     if request.method == 'POST':
-        if request.form.get("action") == "deleteReceived":
-            idToDelete = request.form.get("idToDelete")
-            messageToDelete = Message.query.filter_by(id=idToDelete).first()
-            db.session.delete(messageToDelete)
-            db.session.commit()
-
         if request.form.get("action") == "postMessage":
             timestamp = datetime.datetime.now()
             sender = current_user.id
@@ -278,10 +272,10 @@ def messaging():
         sender = User.query.filter_by(id=message.sender).first().name
         receiver = User.query.filter_by(id=message.receiver).first().name
         content = message.content
+        seen = message.seen
         if not message.seen:
             message.seen = True
             db.session.commit()
-        seen = "Yes"
         messagesReceived.append({"id": message.id, "date": date, "sender": sender, "receiver": receiver,
                                  "content": content, "seen": seen})
 
