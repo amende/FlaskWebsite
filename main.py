@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from dotenv import load_dotenv
+import bcrypt
 import random
 import string
 import os
@@ -91,7 +92,8 @@ def signup_post():
             flash("An account already exists for this email.")
             return(redirect(url_for('signup')))
 
-        new_user = User(email=email, name=name, password=password)
+        new_user = User(email=email, name=name,
+                        password=bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()))
         db.session.add(new_user)
         db.session.commit()
         flash("Account has been created, now please login.")
@@ -123,7 +125,7 @@ def editProfile():
 
     password = request.form.get('password')
     if password != "":
-        current_user.password = password
+        current_user.password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
         notif_success = True
 
     if notif_success:
@@ -166,7 +168,7 @@ def login_post():
             flash('Bad email/password combination')
             return(render_template('login.html'))
 
-        if user.password == password:
+        if bcrypt.checkpw(password.encode('utf-8'), user.password):
             login_user(user)
             return(redirect(url_for('profile')))
         else:
