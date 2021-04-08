@@ -1,7 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from dotenv import load_dotenv
-from werkzeug.utils import secure_filename
 import random
 import string
 import os
@@ -235,8 +234,8 @@ def searchStamp():
         name = request.form.get('name')
 
         timbres = Stamp.query.filter(Stamp.name.ilike('%'+name+'%'))   \
-                              .filter(Stamp.year >= min_year, Stamp.year <= max_year)   \
-                              .filter_by(isPublic=True).limit(50)
+                             .filter(Stamp.year >= min_year, Stamp.year <= max_year)   \
+                             .filter_by(isPublic=True).limit(50)
         return(render_template("search.html", timbres=timbres))
 
 
