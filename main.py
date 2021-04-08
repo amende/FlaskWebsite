@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from dotenv import load_dotenv
+from flask_wtf.csrf import CSRFProtect
 import bcrypt
 import random
 import string
@@ -33,6 +34,10 @@ def allowed_file(filename):
 
 # Database initialisation
 db.init_app(app)
+
+# CSRF protection
+csrf = CSRFProtect()
+csrf.init_app(app)
 
 # Just for easier debug
 if os.getenv("debug"):

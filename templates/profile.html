@@ -42,6 +42,7 @@
       </br>
         <p style="text-align:left;"> Note : leave empty any field to keep as is.</p>
         <form class="ui form" action="editProfile" method="POST" style="width: 500px;">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
           <div class="field">
             <label>Username</label>
             <input type="text" name="name" placeholder="{{current_user.name}}">

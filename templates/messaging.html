@@ -21,6 +21,7 @@
               Send message
             </h1>
             <form class="ui form" action="/messaging" method='POST' style="width: 500px;">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
               <div class="field">
                 <label>Username of receiver</label>
                 <input type="text" name="receiver" placeholder="receiver">
@@ -107,6 +108,7 @@
 
             <br></br>
             <form action="/messaging" method='POST'>
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
               <input type="hidden" name="action" value="refresh"></input>
               <button class="ui orange submit button" type="submit"><i class="retweet icon"></i>Refresh</button>
             </form>

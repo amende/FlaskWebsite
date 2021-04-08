@@ -9,6 +9,7 @@
   <div class="ui two column centered grid" style="margin-top: 2em;">
     <div class="ui center aligned segment" style="width: min-content;">
       <form class="ui form" action="signup" method="POST" style="width: 500px;">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         <div class="field">
           <label>Username</label>
           <input type="text" name="name" placeholder="Name">

@@ -10,6 +10,7 @@
   <div class="ui two column centered grid" style="margin-top: 2em;">
     <div class="ui center aligned segment" style="width: content;">
       <form class="ui form" action="/searchStamp" method='POST'>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         <div class="equal width fields">
           <div class="field">
             <label>Minimum year</label>
