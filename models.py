@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import backref, relationship
 from flask_login import UserMixin
 
 
@@ -14,7 +15,9 @@ class User(UserMixin, db.Model):
 
 class Timbre(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    owner = db.Column(db.Integer, db.ForeignKey('user.id'))
+    owner = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'))
+    # Just to make sure deleting a user also deletes the stamps
+    user = relationship(User, backref=backref('Timbre', cascade='all,delete'))
     name = db.Column(db.String(100))
     year = db.Column(db.Integer)
     isPublic = db.Column(db.Boolean)
@@ -24,7 +27,12 @@ class Timbre(db.Model):
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     timestamp = db.Column(db.DateTime)
-    sender = db.Column(db.Integer, db.ForeignKey('user.id'))
-    receiver = db.Column(db.Integer, db.ForeignKey('user.id'))
+    sender = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'))
+    receiver = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'))
+    # Just to make sure deleting a user also deletes the messages
+    sender_r = relationship(User, backref=backref('Message sndr', cascade='all,delete'),
+                            primaryjoin=User.id == sender)
+    receiver_r = relationship(User, backref=backref('Message rcvr', cascade='all,delete'),
+                              primaryjoin=User.id == receiver)
     content = db.Column(db.String(140))
     seen = db.Column(db.Boolean)
