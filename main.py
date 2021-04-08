@@ -42,7 +42,7 @@ csrf.init_app(app)
 # Just for easier debug
 if os.getenv("debug"):
     with app.app_context():
-        # db.drop_all()
+        db.drop_all()
         db.create_all()
 
 
@@ -87,6 +87,13 @@ def signup_post():
         email = request.form.get('email')
         password = request.form.get('password')
 
+        if len(password) < 8:
+            flash("Please choose a password at least 8 characters long.")
+            return redirect(url_for("signup"))
+        if len(name) < 3:
+            flash("Please choose a username at least 4 characters long.")
+            return redirect(url_for("signup"))
+
         user = User.query.filter_by(name=name).first()
         if user:
             flash("This username is already taken.")
@@ -120,6 +127,9 @@ def editProfile():
 
     name = request.form.get('name')
     if name != "":
+        if len(name) < 3:
+            flash("Please choose a username at least 4 characters long.")
+            return redirect(url_for("profile"))
         current_user.name = name
         notif_success = True
 
@@ -130,6 +140,9 @@ def editProfile():
 
     password = request.form.get('password')
     if password != "":
+        if len(name) < 8:
+            flash("Please choose a password at least 8 characters long.")
+            return redirect(url_for("profile"))
         current_user.password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
         notif_success = True
 
@@ -140,14 +153,17 @@ def editProfile():
     return render_template('profile.html')
 
 
-@app.route('/deleteProfile')
+@app.route('/deleteProfile', methods=['GET', 'POST'])
 @login_required
 def deleteProfile():
-    db.session.delete(User.query.filter_by(id=current_user.id).first())
-    db.session.commit()
-    logout_user()
-    flash("Successfully deleted profile")
-    return render_template('home.html')
+    if request.method == 'GET':
+        return render_template('confirmDeleteProfile.html')
+    if request.method == 'POST':
+        db.session.delete(User.query.filter_by(id=current_user.id).first())
+        db.session.commit()
+        logout_user()
+        flash("Successfully deleted profile")
+        return render_template('home.html')
 
 
 @app.route('/login')

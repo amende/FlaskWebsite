@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {% include "header.html" %}
+</head>
+<body>
+  {% include "navbar.html" %}
+  {% include "errors.html" %}
+  <div class="ui two column centered grid" style="margin-top: 2em;">
+    <div class="ui center aligned segment" style="width: content;">
+     <p style="text-weight:bold;">Are you sure ?<br/>This will delete all your data on this website, including messages.<br/>This action cannot be undone !</p>
+       <form class="ui form" action="/deleteProfile" method='POST'>
+         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+           <button class="ui submit red button" type="submit">Yes !</button>
+           <a href="/profile"><button class="ui blue button" type="button">No, go back</button></a>
+       </form>
+    </div>
+  </div>
+  {% include "footer.html" %}
+</body>
+</html>
