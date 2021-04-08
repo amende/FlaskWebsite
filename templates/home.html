@@ -14,6 +14,7 @@
         <h1 class="ui huge header">The perfect's stamp collector website</h1>
         <p>Come exchange your stamps and manage your collection on our website !</p>
 
+        {% if not current_user.is_authenticated %}
         <div class="ui buttons">
           <a href="/login">
             <div class="ui blue button">Log in</div>
@@ -23,6 +24,11 @@
             <div class="ui positive button">Sign up</div>
           </a>
         </div>
+        {% else %}
+        <a href="/maCollec">
+          <div class="ui orange button">Go to collection</div>
+        </a>
+        {% endif %}
 
         <br/>
         <br/>

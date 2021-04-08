@@ -37,7 +37,7 @@ db.init_app(app)
 # Just for easier debug
 if os.getenv("debug"):
     with app.app_context():
-        #db.drop_all()
+        # db.drop_all()
         db.create_all()
 
 
@@ -65,30 +65,38 @@ def profile():
 
 @app.route('/signup')
 def signup():
-    return(render_template('signup.html'))
+    if current_user.is_authenticated:
+        flash('You are already registered and signed in')
+        return(redirect(url_for('profile')))
+    else:
+        return(render_template('signup.html'))
 
 
 @app.route('/signup', methods=['POST'])
 def signup_post():
-    name = request.form.get('name')
-    email = request.form.get('email')
-    password = request.form.get('password')
+    if current_user.is_authenticated:
+        flash('You are already registered and signed in')
+        return(redirect(url_for('profile')))
+    else:
+        name = request.form.get('name')
+        email = request.form.get('email')
+        password = request.form.get('password')
 
-    user = User.query.filter_by(name=name).first()
-    if user:
-        flash("This username is already taken.")
-        return(redirect(url_for('signup')))
+        user = User.query.filter_by(name=name).first()
+        if user:
+            flash("This username is already taken.")
+            return(redirect(url_for('signup')))
 
-    user = User.query.filter_by(email=email).first()
-    if user:
-        flash("An account already exists for this email.")
-        return(redirect(url_for('signup')))
+        user = User.query.filter_by(email=email).first()
+        if user:
+            flash("An account already exists for this email.")
+            return(redirect(url_for('signup')))
 
-    new_user = User(email=email, name=name, password=password)
-    db.session.add(new_user)
-    db.session.commit()
-    flash("Account has been created, now please login.")
-    return redirect(url_for("login"))
+        new_user = User(email=email, name=name, password=password)
+        db.session.add(new_user)
+        db.session.commit()
+        flash("Account has been created, now please login.")
+        return redirect(url_for("login"))
 
 
 @app.route('/logout')
@@ -138,25 +146,33 @@ def deleteProfile():
 
 @app.route('/login')
 def login():
-    return render_template('login.html')
+    if current_user.is_authenticated:
+        flash('You are already signed in')
+        return(redirect(url_for('profile')))
+    else:
+        return render_template('login.html')
 
 
 @app.route('/login', methods=['POST'])
 def login_post():
-    email = request.form.get('email')
-    password = request.form.get('password')
-
-    user = User.query.filter_by(email=email).first()
-    if not user:
-        flash('Bad email/password combination')
-        return(render_template('login.html'))
-
-    if user.password == password:
-        login_user(user)
+    if current_user.is_authenticated:
+        flash('You are already signed in')
         return(redirect(url_for('profile')))
     else:
-        flash('Bad email/password combination')
-        return(render_template('login.html'))
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            flash('Bad email/password combination')
+            return(render_template('login.html'))
+
+        if user.password == password:
+            login_user(user)
+            return(redirect(url_for('profile')))
+        else:
+            flash('Bad email/password combination')
+            return(render_template('login.html'))
 
 
 # gestion de la collection:
