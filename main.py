@@ -120,6 +120,11 @@ def logout():
     return render_template('home.html')
 
 
+@app.route('/tandc')
+def tandc():
+    return render_template('tandc.html')
+
+
 @app.route('/editProfile', methods=['POST'])
 @login_required
 def editProfile():
