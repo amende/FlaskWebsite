@@ -8,7 +8,7 @@ import os
 import datetime
 
 # local files:
-from models import User, Timbre, db, Message
+from models import User, Stamp, db, Message
 
 
 # Load environment variables
@@ -178,19 +178,19 @@ def login_post():
 # gestion de la collection:
 
 
-@app.route('/maCollec')
+@app.route('/myCollec')
 @login_required
-def maCollec():
+def myCollec():
     user = current_user
-    timbres = Timbre.query.filter_by(owner=user.id)
-    return(render_template("maCollec.html", timbres=timbres))
+    timbres = Stamp.query.filter_by(owner=user.id)
+    return(render_template("myCollec.html", timbres=timbres))
 
 
-@app.route('/ajoutTimbre', methods=['GET', 'POST'])
+@app.route('/addStamp', methods=['GET', 'POST'])
 @login_required
-def ajoutTimbre():
+def addStamp():
     if request.method == 'GET':
-        return(render_template("addTimbre.html"))
+        return(render_template("addStamp.html"))
     if request.method == 'POST':
         # gestion de l'image
         if 'file' not in request.files:
@@ -210,10 +210,10 @@ def ajoutTimbre():
         year = request.form.get('date')
         owner = current_user.id
         isPublic = request.form.get('isPublic') == 'on'
-        new_timbre = Timbre(name=name, year=year, owner=owner, isPublic=isPublic, fileName=securedFileName)
+        new_timbre = Stamp(name=name, year=year, owner=owner, isPublic=isPublic, fileName=securedFileName)
         db.session.add(new_timbre)
         db.session.commit()
-        return(redirect(url_for("maCollec")))
+        return(redirect(url_for("myCollec")))
 
 
 # Recherche de timbres
@@ -221,7 +221,7 @@ def ajoutTimbre():
 @login_required
 def searchStamp():
     if request.method == 'GET':
-        timbres = Timbre.query.filter_by(isPublic=True).limit(50)
+        timbres = Stamp.query.filter_by(isPublic=True).limit(50)
         return(render_template("search.html", timbres=timbres))
     if request.method == 'POST':
         min_year = request.form.get('min_year')
@@ -234,8 +234,8 @@ def searchStamp():
 
         name = request.form.get('name')
 
-        timbres = Timbre.query.filter(Timbre.name.ilike('%'+name+'%'))   \
-                              .filter(Timbre.year >= min_year, Timbre.year <= max_year)   \
+        timbres = Stamp.query.filter(Stamp.name.ilike('%'+name+'%'))   \
+                              .filter(Stamp.year >= min_year, Stamp.year <= max_year)   \
                               .filter_by(isPublic=True).limit(50)
         return(render_template("search.html", timbres=timbres))
 

@@ -13,11 +13,11 @@ class User(UserMixin, db.Model):
     name = db.Column(db.String(100), unique=True)
 
 
-class Timbre(db.Model):
+class Stamp(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     owner = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'))
     # Just to make sure deleting a user also deletes the stamps
-    user = relationship(User, backref=backref('Timbre', cascade='all,delete'))
+    user = relationship(User, backref=backref('Stamp', cascade='all,delete'))
     name = db.Column(db.String(100))
     year = db.Column(db.Integer)
     isPublic = db.Column(db.Boolean)
