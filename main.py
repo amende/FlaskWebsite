@@ -42,7 +42,7 @@ csrf.init_app(app)
 # Just for easier debug
 if os.getenv("debug"):
     with app.app_context():
-        db.drop_all()
+        # db.drop_all()
         db.create_all()
 
 
@@ -300,11 +300,12 @@ def messaging():
         sender = User.query.filter_by(id=message.sender).first().name
         receiver = User.query.filter_by(id=message.receiver).first().name
         content = message.content
-        seen = message.seen
-        if not message.seen:
+        seen = "Yes" if message.seen else "No"
+        if not(message.seen):
             message.seen = True
             db.session.commit()
         messagesReceived.append({"id": message.id, "date": date, "sender": sender, "receiver": receiver,
+                                 "sender_id": message.sender, "receiver_id": message.receiver,
                                  "content": content, "seen": seen})
 
     # Getting sent messages
@@ -316,18 +317,25 @@ def messaging():
         sender = User.query.filter_by(id=message.sender).first().name
         receiver = User.query.filter_by(id=message.receiver).first().name
         content = message.content
-        if message.seen:
-            seen = "Yes"
-        else:
-            seen = "No"
+        seen = "Yes" if message.seen else "No"
         messagesSent.append({"id": message.id, "date": date, "sender": sender, "receiver": receiver,
+                             "sender_id": message.sender, "receiver_id": message.receiver,
                              "content": content, "seen": seen})
 
     messages = messagesReceived+messagesSent
     messages.sort(key=lambda x: x["date"], reverse=True)
+    print(messages)
     return(render_template("messaging.html", messagesReceived=messagesReceived, messagesSent=messagesSent,
                            messages=messages))
 
+
+@login_required
+def get_message_number():
+    messagesNotSeen = Message.query.filter_by(receiver=current_user.id, seen=False).all()
+    return len(messagesNotSeen)
+
+
+app.jinja_env.globals.update(get_message_number=get_message_number)
 
 # Start development web server
 if __name__ == '__main__':

@@ -11,7 +11,7 @@
 
   {% include "navbar.html" %}
   {% include "errors.html" %}
-  <div class="ui two column centered grid" style="margin-top: 2em;">
+  <div class="ui two column centered grid" style="margin-top: 2em;margin-bottom: 0.5em">
     <div class="ui center aligned segment" style="width: content;">
       <div class="ui internally celled grid">
         <div class="row">
@@ -49,7 +49,7 @@
               <div class="active content">
                 <div class="ui feed">
                   {% for message in messages %}
-                  {% if message.seen == "No" and message.receiver != current_user.id %}
+                  {% if message.seen == "No" and message.sender_id != current_user.id %}
                   <div class="event">
                     <div class="label">
                       <i class="pencil icon"></i>
@@ -81,7 +81,7 @@
               <div class="content">
                 <div class="ui feed">
                   {% for message in messages %}
-                  {% if message.seen == "Yes" or message.receiver == current_user.id %}
+                  {% if message.seen == "Yes" or message.sender_id == current_user.id %}
                   <div class="event">
                     <div class="label">
                       <i class="pencil icon"></i>

@@ -23,6 +23,10 @@
       </a>
       <a class="item" href="/messaging">
         Messaging
+        {% set mn = get_message_number() %}
+        {% if mn>0 %}
+        <div class="ui mini red circular label">{{ mn }}</div>
+        {% endif %}
       </a>
       <a class="item" href="/logout">
         Log out

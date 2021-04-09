@@ -8,74 +8,72 @@
 
   {% include "navbar.html" %}
   {% include "errors.html" %}
-  <div class="ui two column centered grid" style="margin-top: 2em;">
-    <div class="row">
-      <div class="ui large message">
-        <h1 class="ui huge header">The perfect's stamp collector website</h1>
-        <p>Come exchange your stamps and manage your collection on our website !</p>
+  <div class="ui two column centered grid" style="margin-top: 2em;margin-bottom: 0.5em">
+    <div class="ui large message">
+      <h1 class="ui huge header">The perfect's stamp collector website</h1>
+      <p>Come exchange your stamps and manage your collection on our website !</p>
 
-        {% if not current_user.is_authenticated %}
-        <div class="ui buttons">
-          <a href="/login">
-            <div class="ui blue button">Log in</div>
-          </a>
-          <div class="or"></div>
-          <a href="/signup">
-            <div class="ui positive button">Sign up</div>
-          </a>
-        </div>
-        {% else %}
-        <a href="/myCollec">
-          <div class="ui orange button">Go to collection</div>
+      {% if not current_user.is_authenticated %}
+      <div class="ui buttons">
+        <a href="/login">
+          <div class="ui blue button">Log in</div>
         </a>
-        {% endif %}
-
-        <br/>
-        <br/>
-        <h3 class="ui header" style="text-align: left;">A very active community</h3>
-        <div class="ui horizontal statistics">
-          <div class="statistic">
-            <div class="value">
-              <i class="trophy icon"></i>
-              22
-            </div>
-            <div class="label">
-              International Prizes
-            </div>
-          </div>
-          <div class="statistic">
-            <div class="value">
-              <i class="ticket icon"></i>
-              0
-            </div>
-            <div class="label">
-              Stamps on our website
-            </div>
-          </div>
-          <div class="statistic">
-            <div class="value">
-              <i class="protect icon"></i>
-              81
-            </div>
-            <div class="label">
-              Security breaches found
-            </div>
-          </div>
-        </div>
-        And since we are chaotic devs,<br/>here's a loading icon that loads nothing.
-        <div class="ui segment">
-          <div class="ui active inverted dimmer">
-            <div class="ui large text loader">
-              Loading
-            </div>
-          </div>
-          <br><br>
-          <br><br>
-          <br><br>
-        </div>
-        <br/>
-        Absolutely, deliciously frustrating, isn't it ?
+        <div class="or"></div>
+        <a href="/signup">
+          <div class="ui positive button">Sign up</div>
+        </a>
       </div>
+      {% else %}
+      <a href="/myCollec">
+        <div class="ui orange button">Go to collection</div>
+      </a>
+      {% endif %}
+
+      <br/>
+      <br/>
+      <h3 class="ui header" style="text-align: left;">A very active community</h3>
+      <div class="ui horizontal statistics">
+        <div class="statistic">
+          <div class="value">
+            <i class="trophy icon"></i>
+            22
+          </div>
+          <div class="label">
+            International Prizes
+          </div>
+        </div>
+        <div class="statistic">
+          <div class="value">
+            <i class="ticket icon"></i>
+            0
+          </div>
+          <div class="label">
+            Stamps on our website
+          </div>
+        </div>
+        <div class="statistic">
+          <div class="value">
+            <i class="protect icon"></i>
+            81
+          </div>
+          <div class="label">
+            Security breaches found
+          </div>
+        </div>
+      </div>
+      And since we are chaotic devs,<br/>here's a loading icon that loads nothing.
+      <div class="ui segment">
+        <div class="ui active inverted dimmer">
+          <div class="ui large text loader">
+            Loading
+          </div>
+        </div>
+        <br><br>
+        <br><br>
+        <br><br>
+      </div>
+      <br/>
+      Absolutely, deliciously frustrating, isn't it ?
     </div>
   </div>
 
