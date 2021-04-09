@@ -6,4 +6,12 @@
     Made with <i class="heart icon"></i> By G.Michard, M.LeNué, A.Blanchon
     </div>
 </div>
+<script src="{{ url_for('static', filename='styles/components/transition.js') }}"></script>
+<script>
+  $(document).ready(function() {
+      $('.heart.icon').hover(function(){
+          $(this).transition('bounce');
+      }, function(){});
+  });
+</script>
 </div>
