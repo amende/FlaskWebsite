@@ -301,28 +301,33 @@ def exchange():
             return(render_template('exchange.html', stamps=stamps, hisStamp=hisStamp))
     else:
         exchanges = Exchange.query.filter_by(receiverID=current_user.id)
+        exchanges = [{"id": ex.id,
+                      "senderName": User.query.filter_by(id=ex.senderID).first().name,
+                      "stampSent": Stamp.query.filter_by(owner=ex.senderStampID).first(),
+                      "stampReceived": Stamp.query.filter_by(owner=ex.receiverStampID).first()}
+                     for ex in exchanges]
         return(render_template('pendingExchanges.html', exchanges=exchanges))
 
 
 @app.route('/AcceptExchange', methods=['POST'])
 @login_required
 def AcceptExchange():
+    accepted = request.form['accept'] == 'yes'
     exchange = Exchange.query.filter_by(id=request.form["exchangeid"]).first()
     myStamp = Stamp.query.filter_by(id=exchange.senderID).first()
     hisStamp = Stamp.query.filter_by(id=exchange.receiverID).first()
     timestamp = datetime.datetime.now()
-    if request.form['accept'] == 'yes':
+    if accepted:
         myStamp.owner = exchange.senderStampID
         hisStamp.owner = exchange.receiverStampID
-        db.session.commit()
-    db.session.delete(exchange)
     db.session.commit()
-    flash("Exchange finished")
+    db.session.delete(exchange)
+    flash("Exchange accepted" if accepted else "Exchange refused")
     sender = current_user.id
     seen = False
     new_message = Message(timestamp=timestamp, sender=sender, receiver=exchange.senderID,
-                          content="I accepted your exchange" if request.form['accept'] == 'yes' else
-                                  "Your exchange was refused", seen=seen)
+                          content="I accepted your exchange" if accepted else
+                                  "I refused your exchange", seen=seen)
     db.session.add(new_message)
     db.session.commit()
     return(render_template('home.html', stampCount=Stamp.query.count()))

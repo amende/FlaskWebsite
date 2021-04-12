@@ -2,52 +2,61 @@
 <html>
 <head>
   {% include "header.html" %}
-  <script nonce="{{ csp_nonce() }}" src="{{ url_for('static', filename='styles/components/accordion.js') }}"></script>
 </head>
 <body>
-    {% include "navbar.html" %}
-    {% include "errors.html" %}
-    <div class="ui two column centered grid" id="mainContainer">
-        <div class="ui center aligned segment" id="mainSegment">
-          <div class="ui internally celled grid">
+  {% include "navbar.html" %}
+  {% include "errors.html" %}
+  <div class="ui two column centered grid" id="mainContainer">
+    <div class="ui center aligned segment" id="mainSegment">
+      <div class="ui internally celled grid">
+        <div class="row">
+          <div class="eight wide column">
             <form action=/confirmExchange method='GET'>
-                <div class="row">
-                    <h1>
-                        Select the stamp you want to exchange :
-                    </h1>
-                    {% for stamp in stamps %}
-                    <input type="radio" name="MyStamp" required="required" value="{{stamp.id}}">
-                    <div class="link item">
-                    <div class="ui tiny image">
-                        <img src="{{ url_for('static', filename=stamp.fileName) }}">
+              <h3>
+                Select the stamp you want to exchange :
+              </h3>
+              <div class="ui cards">
+                {% for stamp in stamps %}
+                <!-- <input type="radio" name="MyStamp" required="required" value="{{stamp.id}}"> -->
+                <a class="ui special centered card" id="smolCard" href="/confirmExchange?MyStamp={{stamp.id}}&HisStamp={{hisStamp.id}}">
+                  <div class="ui image">
+                    <img src="{{ url_for('static', filename=stamp.fileName) }}">
+                  </div>
+                  <div class="content">
+                    <div class="header">{{ stamp.name }}</div>
+                    <div class="description">
+                      Printed in {{ stamp.year }}
                     </div>
-                    <div class="content">
-                        <a class="header">{{ stamp.name }}</a>
-                        <div class="description">
-                        A stamp from year {{ stamp.year }}
-                        </div>
-                    </div>
-                    </div>
-                    {% endfor %}
+                  </div>
+                </a>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="eight wide column">
+              <h3>
+                The stamp you want :
+              </h3>
+              <div class="ui centered card" id="smolCard">
+                <div class="ui image">
+                  <img src="{{ url_for('static', filename=hisStamp.fileName) }}">
                 </div>
-                <div class="row">
-                    <h1>
-                        The stamp I want :
-                    </h1>
-                    <div class="link item">
-                        <div class="ui tiny image">
-                            <img src="{{ url_for('static', filename=hisStamp.fileName) }}">
-                        </div>
-                    </div>
-                    <input type="hidden" name="HisStamp" value="{{hisStamp.id}}">
+                <div class="content">
+                  <a class="header">{{ hisStamp.name }}</a>
+                  <div class="description">
+                    Printed in {{ hisStamp.year }}
+                  </div>
                 </div>
-                <input type=submit >
-            </form>
+              </div>
+              <!-- <input type="hidden" name="HisStamp" value="{{hisStamp.id}}"> -->
+            </div>
+            <!-- <input type=submit > -->
+          </form>
         </div>
+      </div>
     </div>
-</div>
+  </div>
 
 
-{% include "footer.html" %}
+  {% include "footer.html" %}
 </body>
 </html>

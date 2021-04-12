@@ -7,22 +7,68 @@
   {% include "navbar.html" %}
   {% include "errors.html" %}
 
-  <p>you can go check the exchangeable stamps <a href="/searchStamp">here</a></p>
+  <div class="ui two column centered grid" id="mainContainer">
+    <div class="ui center aligned segment" id="SearchSegment">
 
-    <p>your pending exchanges:</p>
+      <h1>Pending exchanges :</h1>
+      <br/>
 
-    {% for exchange in exchanges %}
-    <p>you get : {{exchange.senderStampID}} for the stamp {{exchange.receiverStampID}}</p>
-    <form action="/AcceptExchange" method="POST">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-        <input type="hidden" name="exchangeid" value="{{exchange.id}}">
-        <label> <i class="check icon"></i></label>
-        <input type="radio" name="accept" value="yes" required=required>
-        <label> <i class="close icon"></i></label>
-        <input type="radio" name="accept" value="no" required=required>
-        <button class="ui blue submit button" type="submit"> Send response </button>
-    </form>
-    {% endfor %}
+      {% if exchanges|length==0 %}
+      <p> No one sent you an exchange request (yet !) </p>
+      {% endif %}
+      {% for exchange in exchanges %}
+      <p> {{ exchange["senderName"] }} sent you an exchange request : </p>
+      <br/>
+      
+      <div class="ui two column centered grid">
+      <table class="ui very basic collapsing large celled table">
+        <thead>
+          <tr><th>You get</th>
+            <th>You give</th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td>
+                <h4 class="ui image header">
+                  <img class="ui rounded image" src="{{ url_for('static', filename=exchange["stampSent"].fileName) }}">
+                  <div class="content">
+                    {{ exchange["stampSent"].name }}
+                    <div class="sub header">Printed in {{ exchange["stampSent"].year }}
+                    </div>
+                  </div>
+                </h4></td>
+                <td>
+                  <h4 class="ui image header">
+                    <img class="ui small rounded image" src="{{ url_for('static', filename=exchange["stampReceived"].fileName) }}">
+                    <div class="content">
+                      {{ exchange["stampReceived"].name }}
+                      <div class="sub header">Printed in {{ exchange["stampReceived"].year }}
+                      </div>
+                    </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <br/>
+      <form action="/AcceptExchange" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="exchangeid" value="{{ exchange["id"] }}">
+        <button class="ui blue submit button"  name="accept" value="yes" type="submit"> Accept </button>
+        <button class="ui red submit button"  name="accept" value="no" type="submit"> Refuse </button>
+      </form>
+      <div class="ui divided items">
+        <div class="ui item">
+          <br/>
+        </div>
+        <div class="ui item">
+          <br/>
+        </div>
+      </div>
+      {% endfor %}
+      <p>You can go check the exchangeable stamps <a href="/searchStamp">here</a>.</p>
+    </div>
+  </div>
   {% include "footer.html" %}
 
 </body>

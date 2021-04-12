@@ -65,3 +65,7 @@
 #textBold {
   text-weight:bold;
 }
+
+#smolCard {
+  width: 100px;
+}
