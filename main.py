@@ -59,13 +59,14 @@ def load_user(id):
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('home.html',stampCount=Stamp.query.count())
 
 
 @app.route('/profile')
 @login_required
 def profile():
-    return render_template('profile.html')
+    return render_template('profile.html',
+                            stampsUploaded = Stamp.query.filter_by(owner=current_user.id).count())
 
 
 @app.route('/signup')
@@ -117,7 +118,7 @@ def signup_post():
 def logout():
     logout_user()
     flash("Successfully logged out")
-    return render_template('home.html')
+    return render_template('home.html',stampCount=Stamp.query.count())
 
 
 @app.route('/tandc')
@@ -155,7 +156,8 @@ def editProfile():
         flash("Successfully edited profile")
 
     db.session.commit()
-    return render_template('profile.html')
+    return render_template('profile.html',
+                        stampsUploaded = Stamp.query.filter_by(owner=current_user.id).count())
 
 
 @app.route('/deleteProfile', methods=['GET', 'POST'])
@@ -168,7 +170,7 @@ def deleteProfile():
         db.session.commit()
         logout_user()
         flash("Successfully deleted profile")
-        return render_template('home.html')
+        return render_template('home.html',stampCount=Stamp.query.count())
 
 
 @app.route('/login')
@@ -337,7 +339,6 @@ def messaging():
 
     messages = messagesReceived+messagesSent
     messages.sort(key=lambda x: x["date"], reverse=True)
-    print(messages)
     return(render_template("messaging.html", messagesReceived=messagesReceived, messagesSent=messagesSent,
                            messages=messages))
 
