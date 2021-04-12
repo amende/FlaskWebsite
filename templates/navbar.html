@@ -1,8 +1,8 @@
-<div style="min-height:100%;position:relative;padding-bottom:5em">
-  <div style="padding-bottom:3.2em">
+<div id="navbarContainer">
+  <div id="navbar">
     <div class="ui fixed inverted main menu">
       <a class="item" href="/">
-        <img src="{{ url_for('static',filename='images/logo.png') }}" style="height:2em; width:2em;">
+        <img src="{{ url_for('static',filename='images/logo.png') }}" id="logo">
       </a>
       {% if current_user.is_anonymous %}
       <a class="item" href="/login">

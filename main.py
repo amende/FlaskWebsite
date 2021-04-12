@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
+from flask_talisman import Talisman
 from dotenv import load_dotenv
 from flask_wtf.csrf import CSRFProtect
 import bcrypt
@@ -26,10 +27,27 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = os.getenv('UPLOAD_FOLDER')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
+# CSP Policy
+csp = {
+    'default-src': '\'self\' https://fonts.gstatic.com/ data: ',
+    'script-src': '\'self\' \'unsafe-inline\'',
+    'style-src': '\'self\' https://fonts.googleapis.com/ \'unsafe-inline\'',
+}
+Talisman(app, content_security_policy=csp, content_security_policy_nonce_in=['style-src', 'script-src'])
+
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@app.after_request
+def protect_response(response):
+    response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    return response
 
 
 # Database initialisation

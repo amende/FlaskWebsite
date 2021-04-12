@@ -2,24 +2,24 @@
 <html>
 <head>
   {% include "header.html" %}
-  <script src="{{ url_for('static', filename='styles/components/accordion.js') }}"></script>
+  <script nonce="{{ csp_nonce() }}" src="{{ url_for('static', filename='styles/components/accordion.js') }}"></script>
 </head>
 <body>
-  <script language='javascript'>
+  <script nonce="{{ csp_nonce() }}" language='javascript'>
   $(document).ready(function(){$('.ui.accordion').accordion();});
   </script>
 
   {% include "navbar.html" %}
   {% include "errors.html" %}
-  <div class="ui two column centered grid" style="margin-top: 2em;margin-bottom: 0.5em">
-    <div class="ui center aligned segment" style="width: content;">
+  <div class="ui two column centered grid" id="mainContainer">
+    <div class="ui center aligned segment" id="mainSegment">
       <div class="ui internally celled grid">
         <div class="row">
           <div class="eight wide column">
             <h1>
               Send message
             </h1>
-            <form class="ui form" action="/messaging" method='POST' style="width: 500px;">
+            <form class="ui form" action="/messaging" method='POST' id="mediumWidth">
               <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
               <div class="field">
                 <label>Username of receiver</label>
@@ -41,7 +41,7 @@
             </h1>
 
 
-            <div class="ui styled fluid accordion" style="exclusive:false;">
+            <div class="ui styled fluid accordion">
               <div class="active title">
                 <i class="dropdown icon"></i>
                 New messages

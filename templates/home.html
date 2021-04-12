@@ -8,7 +8,7 @@
 
   {% include "navbar.html" %}
   {% include "errors.html" %}
-  <div class="ui two column centered grid" style="margin-top: 2em;margin-bottom: 0.5em">
+  <div class="ui two column centered grid" id="mainContainer">
     <div class="ui large message">
       <h1 class="ui huge header">The perfect's stamp collector website</h1>
       <p>Come exchange your stamps and manage your collection on our website !</p>
@@ -31,7 +31,7 @@
 
       <br/>
       <br/>
-      <h3 class="ui header" style="text-align: left;">A very active community</h3>
+      <h3 class="ui header" id="leftAligned">A very active community</h3>
       <div class="ui horizontal statistics">
         <div class="statistic">
           <div class="value">
@@ -45,7 +45,7 @@
         <div class="statistic">
           <div class="value">
             <i class="ticket icon"></i>
-           {{stampCount}} 
+           {{stampCount}}
           </div>
           <div class="label">
             Stamps on our website

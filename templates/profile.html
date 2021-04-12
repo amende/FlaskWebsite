@@ -6,8 +6,8 @@
 <body>
   {% include "navbar.html" %}
   {% include "errors.html" %}
-  <div class="ui two column centered grid" style="margin-top: 2em;margin-bottom: 0.5em">
-    <div class="ui center aligned segment" style="width: max-content;">
+  <div class="ui two column centered grid" id="mainContainer">
+    <div class="ui center aligned segment" id="mainSegment">
       <div class="ui large header">Hello, {{current_user.name}}</div>
       <br/>
       <div class="ui horizontal divider">So far, you have :</div>
@@ -40,8 +40,8 @@
         <br/>
         <div class="ui horizontal divider">Edit your profile below :</div>
       </br>
-        <p style="text-align:left;"> Note : leave empty any field to keep as is.</p>
-        <form class="ui form" action="editProfile" method="POST" style="width: 500px;">
+        <p id="leftAligned"> Note : leave empty any field to keep as is.</p>
+        <form class="ui form" action="editProfile" method="POST"id="mediumWidth">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
           <div class="field">
             <label>Username</label>

@@ -1,0 +1,63 @@
+#mainContainer {
+  margin-top: 2em;
+  margin-bottom: 0.5em;
+}
+
+#mainSegment {
+  width: content;
+}
+
+#mediumWidth {
+  width: 500px;
+}
+
+#logo {
+  height: 2em;
+  width: 2em;
+}
+
+#navbarContainer {
+  min-height: 100%;
+  position: relative;
+  padding-bottom: 5em;
+}
+
+#navbar {
+  padding-bottom: 3.2em;
+}
+
+#footer {
+  background-color: #EAEAEA;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+#footerLeftAligned {
+  float: left;
+  margin-left: 0.5em;
+}
+
+#footerRightAligned {
+  float: right;
+  margin-right: 0.5em;
+}
+
+#leftAligned {
+  text-align: left;
+}
+
+#tandContainer {
+  min-width: content;
+  max-width: 600px;
+}
+
+#errorDisplay {
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#textBold {
+  text-weight:bold;
+}

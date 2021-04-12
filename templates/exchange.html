@@ -2,13 +2,13 @@
 <html>
 <head>
   {% include "header.html" %}
-  <script src="{{ url_for('static', filename='styles/components/accordion.js') }}"></script>
+  <script nonce="{{ csp_nonce() }}" src="{{ url_for('static', filename='styles/components/accordion.js') }}"></script>
 </head>
 <body>
     {% include "navbar.html" %}
     {% include "errors.html" %}
-    <div class="ui two column centered grid" style="margin-top: 2em;margin-bottom: 0.5em">
-        <div class="ui center aligned segment" style="width: content;">
+    <div class="ui two column centered grid" id="mainContainer">
+        <div class="ui center aligned segment" id="mainSegment">
           <div class="ui internally celled grid">
             <form action=/confirmExchange method='GET'>
                 <div class="row">
