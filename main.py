@@ -275,7 +275,7 @@ def exchange():
     if idwanted:  # if we are coming from the search page
         hisStamp = Stamp.query.filter_by(id=idwanted).first()
         if hisStamp.isPublic:
-            timbres = Stamp.query.filter_by(owner=current_user.id)
+            timbres = Stamp.query.filter_by(owner=current_user.id, isPublic=True)
             return(render_template('exchange.html', timbres=timbres, hisStamp=hisStamp))
     else:
         exchanges = Exchange.query.filter_by(receiverID=current_user.id)
@@ -325,7 +325,7 @@ def confirmExchange():
                                     senderStampID=myStamp.owner)
             db.session.add(new_exchange)
             db.session.commit()
-            flash("Exchange sent")
+            flash("Exchange request sent")
         else:
             flash("The stamp you want is not public or doesn't exist")
         return(redirect(url_for("profile")))
