@@ -40,13 +40,12 @@ class Message(db.Model):
 
 class Exchange(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    senderID =db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'))
+    senderID = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'))
     receiverID = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'))
-    senderStampID=db.Column(db.Integer,db.ForeignKey('stamp.id',ondelete='CASCADE'))
-    receiverStampID=db.Column(db.Integer,db.ForeignKey('stamp.id',ondelete='CASCADE'))
-    #make sure we delete the exchange when stamps disappear
-    #MyStampID_r = relationship(Stamp, backref=backref('Exchange sndr', cascade='all,delete'),
-    #                        primaryjoin=Stamp.id == MyStampID)
-    #OtherStampID_r = relationship(Stamp, backref=backref('Exchange rcvr', cascade='all,delete'),
-    #                          primaryjoin=Stamp.id == OtherStampID)
-    
+    senderStampID = db.Column(db.Integer, db.ForeignKey('stamp.id', ondelete='CASCADE'))
+    receiverStampID = db.Column(db.Integer, db.ForeignKey('stamp.id', ondelete='CASCADE'))
+    # make sure we delete the exchange when stamps disappear
+    MyStampID_r = relationship(Stamp, backref=backref('Exchange sndr', cascade='all,delete'),
+                               primaryjoin=Stamp.id == senderStampID)
+    OtherStampID_r = relationship(Stamp, backref=backref('Exchange rcvr', cascade='all,delete'),
+                                  primaryjoin=Stamp.id == receiverStampID)

@@ -43,7 +43,7 @@ csrf.init_app(app)
 # Just for easier debug
 if os.getenv("debug"):
     with app.app_context():
-        #db.drop_all()
+        # db.drop_all()
         db.create_all()
 
 
@@ -60,14 +60,13 @@ def load_user(id):
 
 @app.route('/')
 def home():
-    return render_template('home.html',stampCount=Stamp.query.count())
+    return render_template('home.html', stampCount=Stamp.query.count())
 
 
 @app.route('/profile')
 @login_required
 def profile():
-    return render_template('profile.html',
-                            stampsUploaded = Stamp.query.filter_by(owner=current_user.id).count())
+    return render_template('profile.html', stampsUploaded=Stamp.query.filter_by(owner=current_user.id).count())
 
 
 @app.route('/signup')
@@ -119,7 +118,7 @@ def signup_post():
 def logout():
     logout_user()
     flash("Successfully logged out")
-    return render_template('home.html',stampCount=Stamp.query.count())
+    return render_template('home.html', stampCount=Stamp.query.count())
 
 
 @app.route('/tandc')
@@ -157,8 +156,7 @@ def editProfile():
         flash("Successfully edited profile")
 
     db.session.commit()
-    return render_template('profile.html',
-                        stampsUploaded = Stamp.query.filter_by(owner=current_user.id).count())
+    return render_template('profile.html', stampsUploaded=Stamp.query.filter_by(owner=current_user.id).count())
 
 
 @app.route('/deleteProfile', methods=['GET', 'POST'])
@@ -171,7 +169,7 @@ def deleteProfile():
         db.session.commit()
         logout_user()
         flash("Successfully deleted profile")
-        return render_template('home.html',stampCount=Stamp.query.count())
+        return render_template('home.html', stampCount=Stamp.query.count())
 
 
 @app.route('/login')
@@ -274,25 +272,26 @@ def searchStamp():
 @login_required
 def exchange():
     idwanted = request.args.get('wanted')
-    if idwanted:  #if we are coming from the search page
-        hisStamp=Stamp.query.filter_by(id=idwanted).first()
+    if idwanted:  # if we are coming from the search page
+        hisStamp = Stamp.query.filter_by(id=idwanted).first()
         if hisStamp.isPublic:
             timbres = Stamp.query.filter_by(owner=current_user.id)
             return(render_template('exchange.html', timbres=timbres, hisStamp=hisStamp))
     else:
-        exchanges=Exchange.query.filter_by(receiverID=current_user.id)
-        return(render_template('pendingExchanges.html',exchanges=exchanges))
+        exchanges = Exchange.query.filter_by(receiverID=current_user.id)
+        return(render_template('pendingExchanges.html', exchanges=exchanges))
 
-@app.route('/AcceptExchange',methods=['POST'])
+
+@app.route('/AcceptExchange', methods=['POST'])
 @login_required
 def AcceptExchange():
-    exchange=Exchange.query.filter_by(id=request.form["exchangeid"]).first()
-    myStamp=Stamp.query.filter_by(id=exchange.senderID).first()
-    hisStamp=Stamp.query.filter_by(id=exchange.receiverID).first()
+    exchange = Exchange.query.filter_by(id=request.form["exchangeid"]).first()
+    myStamp = Stamp.query.filter_by(id=exchange.senderID).first()
+    hisStamp = Stamp.query.filter_by(id=exchange.receiverID).first()
     timestamp = datetime.datetime.now()
-    if request.form['accept']=='yes':
-        myStamp.owner=exchange.senderStampID
-        hisStamp.owner=exchange.receiverStampID
+    if request.form['accept'] == 'yes':
+        myStamp.owner = exchange.senderStampID
+        hisStamp.owner = exchange.receiverStampID
         db.session.commit()
     db.session.delete(exchange)
     db.session.commit()
@@ -300,35 +299,37 @@ def AcceptExchange():
     sender = current_user.id
     seen = False
     new_message = Message(timestamp=timestamp, sender=sender, receiver=exchange.senderID,
-                    content="I accepted your exchange" if request.form['accept']=='yes' else "your exchange was refused", seen=seen)
+                          content="I accepted your exchange" if request.form['accept'] == 'yes' else
+                                  "Your exchange was refused", seen=seen)
     db.session.add(new_message)
     db.session.commit()
-    return(render_template('home.html',stampCount=Stamp.query.count()))
+    return(render_template('home.html', stampCount=Stamp.query.count()))
 
 
-
-@app.route('/confirmExchange',methods=['GET','POST'])
+@app.route('/confirmExchange', methods=['GET', 'POST'])
 @login_required
 def confirmExchange():
-    if request.method=='GET':
-        mystampid=request.args.get("MyStamp")
-        hisstampid=request.args.get("HisStamp")
-        return(render_template('confirmExchange.html',mystampid=mystampid,hisstampid=hisstampid))
-    if request.method=='POST':
-        mystampid=request.form["MyStamp"]
-        hisstampid=request.form["HisStamp"]
-        hisStamp=Stamp.query.filter_by(id=int(hisstampid)).first()
-        myStamp=Stamp.query.filter_by(id=int(mystampid)).first()
-        idSender=current_user.id
-        idReceiver=hisStamp.owner
+    if request.method == 'GET':
+        mystampid = request.args.get("MyStamp")
+        hisstampid = request.args.get("HisStamp")
+        return(render_template('confirmExchange.html', mystampid=mystampid, hisstampid=hisstampid))
+    if request.method == 'POST':
+        mystampid = request.form["MyStamp"]
+        hisstampid = request.form["HisStamp"]
+        hisStamp = Stamp.query.filter_by(id=int(hisstampid)).first()
+        myStamp = Stamp.query.filter_by(id=int(mystampid)).first()
+        idSender = current_user.id
+        idReceiver = hisStamp.owner
         if hisStamp.isPublic:
-            new_exchange = Exchange(senderID=idSender, receiverID=idReceiver, receiverStampID=hisStamp.owner, senderStampID=myStamp.owner)
+            new_exchange = Exchange(senderID=idSender, receiverID=idReceiver, receiverStampID=hisStamp.owner,
+                                    senderStampID=myStamp.owner)
             db.session.add(new_exchange)
             db.session.commit()
             flash("Exchange sent")
         else:
             flash("The stamp you want is not public or doesn't exist")
         return(redirect(url_for("profile")))
+
 
 # Message
 @app.route('/messaging', methods=['GET', 'POST'])
