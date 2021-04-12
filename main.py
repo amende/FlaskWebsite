@@ -330,7 +330,7 @@ def AcceptExchange():
                                   "I refused your exchange", seen=seen)
     db.session.add(new_message)
     db.session.commit()
-    return(render_template('home.html', stampCount=Stamp.query.count()))
+    return(redirect(url_for("exchange")))
 
 
 @app.route('/confirmExchange', methods=['GET', 'POST'])

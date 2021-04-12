@@ -14,12 +14,12 @@
       <br/>
 
       {% if exchanges|length==0 %}
-      <p> No one sent you an exchange request (yet !) </p>
+      <p> No one has sent you an exchange request (yet !) </p>
       {% endif %}
       {% for exchange in exchanges %}
       <p> {{ exchange["senderName"] }} sent you an exchange request : </p>
       <br/>
-      
+
       <div class="ui two column centered grid">
       <table class="ui very basic collapsing large celled table">
         <thead>
