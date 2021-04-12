@@ -8,7 +8,7 @@
   {% include "errors.html" %}
 
   <div class="ui two column centered grid" id="mainContainer">
-    <div class="ui center aligned segment" id="mainSegment">
+    <div class="ui center aligned segment" id="SearchSegment">
       <form class="ui form" action="/searchStamp" method='POST'>
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         <div class="equal width fields">
@@ -32,20 +32,20 @@
 
       <div class="ui divided items">
 
-        {% for timbre in timbres %}
+        {% for stamp in stamps %}
         <div class="link item">
           <div class="ui tiny image">
-            <img src="{{ url_for('static', filename=timbre.fileName) }}">
+            <img src="{{ url_for('static', filename=stamp.fileName) }}">
           </div>
           <div class="content">
-            <a class="header">{{ timbre.name }}</a>
+            <a class="header">{{ stamp.name }}</a>
             <div class="description">
-              Un timbre de l'année {{ timbre.year }} 
+              A stamp from year {{ stamp.year }}
             </div>
           </div>
           <div class="content">
-            {% if timbre.owner!=current_user.id %} 
-              <a href="{{ '/exchange?wanted='+ timbre.id|string}}">
+            {% if stamp.owner!=current_user.id %}
+              <a href="{{ '/exchange?wanted='+ stamp.id|string}}">
                 <span data-tooltip="Send exchange proposition" data-position="bottom center">
                   <i class="plus square icon"></i>
                 </span>

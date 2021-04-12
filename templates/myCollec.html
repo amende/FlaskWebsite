@@ -11,15 +11,15 @@
     <div class="ui center aligned segment" id="mainSegment">
       <div class="ui divided items">
 
-        {% for timbre in timbres %}
+        {% for stamp in stamps %}
         <div class="link item">
           <div class="ui tiny image">
-            <img src="{{ url_for('static', filename=timbre.fileName) }}">
+            <img src="{{ url_for('static', filename=stamp.fileName) }}">
           </div>
           <div class="content">
-            <a class="header">{{ timbre.name }}</a>
+            <a class="header">{{ stamp.name }}</a>
             <div class="description">
-              Un timbre de l'année {{ timbre.year }}
+              A stamp from year {{ stamp.year }}
             </div>
           </div>
         </div>

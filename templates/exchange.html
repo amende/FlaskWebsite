@@ -15,16 +15,16 @@
                     <h1>
                         Select the stamp you want to exchange :
                     </h1>
-                    {% for timbre in timbres %}
-                    <input type="radio" name="MyStamp" required="required" value="{{timbre.id}}">
+                    {% for stamp in stamps %}
+                    <input type="radio" name="MyStamp" required="required" value="{{stamp.id}}">
                     <div class="link item">
                     <div class="ui tiny image">
-                        <img src="{{ url_for('static', filename=timbre.fileName) }}">
+                        <img src="{{ url_for('static', filename=stamp.fileName) }}">
                     </div>
                     <div class="content">
-                        <a class="header">{{ timbre.name }}</a>
+                        <a class="header">{{ stamp.name }}</a>
                         <div class="description">
-                        Un timbre de l'année {{ timbre.year }}
+                        A stamp from year {{ stamp.year }}
                         </div>
                     </div>
                     </div>
@@ -32,7 +32,7 @@
                 </div>
                 <div class="row">
                     <h1>
-                        The stamp I want :O
+                        The stamp I want :
                     </h1>
                     <div class="link item">
                         <div class="ui tiny image">

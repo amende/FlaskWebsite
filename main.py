@@ -85,7 +85,8 @@ def home():
 @login_required
 def profile():
     return render_template('profile.html', stampsUploaded=Stamp.query.filter_by(owner=current_user.id).count(),
-                        stampsExchanged=Exchange.query.filter_by(senderID=current_user.id).count()+Exchange.query.filter_by(receiverID=current_user.id).count())
+                           stampsExchanged=Exchange.query.filter_by(senderID=current_user.id).count()
+                           + Exchange.query.filter_by(receiverID=current_user.id).count())
 
 
 @app.route('/signup')
@@ -176,7 +177,8 @@ def editProfile():
 
     db.session.commit()
     return render_template('profile.html', stampsUploaded=Stamp.query.filter_by(owner=current_user.id).count(),
-                        stampsExchanged=Exchange.query.filter_by(senderID=current_user.id).count()+Exchange.query.filter_by(receiverID=current_user.id).count())
+                           stampsExchanged=Exchange.query.filter_by(senderID=current_user.id).count()
+                           + Exchange.query.filter_by(receiverID=current_user.id).count())
 
 
 @app.route('/deleteProfile', methods=['GET', 'POST'])
@@ -230,8 +232,8 @@ def login_post():
 @login_required
 def myCollec():
     user = current_user
-    timbres = Stamp.query.filter_by(owner=user.id)
-    return(render_template("myCollec.html", timbres=timbres))
+    stamps = Stamp.query.filter_by(owner=user.id)
+    return(render_template("myCollec.html", stamps=stamps))
 
 
 @app.route('/addStamp', methods=['GET', 'POST'])
@@ -258,8 +260,8 @@ def addStamp():
         year = request.form.get('date')
         owner = current_user.id
         isPublic = request.form.get('isPublic') == 'on'
-        new_timbre = Stamp(name=name, year=year, owner=owner, isPublic=isPublic, fileName=securedFileName)
-        db.session.add(new_timbre)
+        new_stamp = Stamp(name=name, year=year, owner=owner, isPublic=isPublic, fileName=securedFileName)
+        db.session.add(new_stamp)
         db.session.commit()
         return(redirect(url_for("myCollec")))
 
@@ -269,8 +271,8 @@ def addStamp():
 @login_required
 def searchStamp():
     if request.method == 'GET':
-        timbres = Stamp.query.filter_by(isPublic=True).limit(50)
-        return(render_template("search.html", timbres=timbres))
+        stamps = Stamp.query.filter_by(isPublic=True).limit(50)
+        return(render_template("search.html", stamps=stamps))
     if request.method == 'POST':
         min_year = request.form.get('min_year')
         if min_year == "":
@@ -282,10 +284,10 @@ def searchStamp():
 
         name = request.form.get('name')
 
-        timbres = Stamp.query.filter(Stamp.name.ilike('%'+name+'%'))   \
-                             .filter(Stamp.year >= min_year, Stamp.year <= max_year)   \
-                             .filter_by(isPublic=True).limit(50)
-        return(render_template("search.html", timbres=timbres))
+        stamps = Stamp.query.filter(Stamp.name.ilike('%'+name+'%'))   \
+                            .filter(Stamp.year >= min_year, Stamp.year <= max_year)   \
+                            .filter_by(isPublic=True).limit(50)
+        return(render_template("search.html", stamps=stamps))
 
 
 @app.route('/exchange')
@@ -295,8 +297,8 @@ def exchange():
     if idwanted:  # if we are coming from the search page
         hisStamp = Stamp.query.filter_by(id=idwanted).first()
         if hisStamp.isPublic:
-            timbres = Stamp.query.filter_by(owner=current_user.id, isPublic=True)
-            return(render_template('exchange.html', timbres=timbres, hisStamp=hisStamp))
+            stamps = Stamp.query.filter_by(owner=current_user.id, isPublic=True)
+            return(render_template('exchange.html', stamps=stamps, hisStamp=hisStamp))
     else:
         exchanges = Exchange.query.filter_by(receiverID=current_user.id)
         return(render_template('pendingExchanges.html', exchanges=exchanges))

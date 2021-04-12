@@ -7,6 +7,10 @@
   width: content;
 }
 
+#SearchSegment {
+  width: 600px;
+}
+
 #mediumWidth {
   width: 500px;
 }
