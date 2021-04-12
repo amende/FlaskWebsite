@@ -267,6 +267,19 @@ def searchStamp():
         return(render_template("search.html", timbres=timbres))
 
 
+@app.route('/exchange')
+@login_required
+def exchange():
+    idwanted = request.args.get('wanted')
+    if idwanted:  #if we are coming from the search page
+        hisStamp=Stamp.query.filter_by(id=idwanted).first()
+        if hisStamp.isPublic:
+            timbres = Stamp.query.filter_by(owner=current_user.id)
+            return(render_template('exchange.html', timbres=timbres, hisStamp=hisStamp))
+    return(render_template('notYet.html'))
+
+
+
 # Message
 @app.route('/messaging', methods=['GET', 'POST'])
 @login_required

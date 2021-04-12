@@ -40,8 +40,17 @@
           <div class="content">
             <a class="header">{{ timbre.name }}</a>
             <div class="description">
-              Un timbre de l'année {{ timbre.year }}
+              Un timbre de l'année {{ timbre.year }} 
             </div>
+          </div>
+          <div class="content">
+            {% if timbre.owner!=current_user.id %} 
+              <a href="{{ '/exchange?wanted='+ timbre.id|string}}">
+                <span data-tooltip="Send exchange proposition" data-position="bottom center">
+                  <i class="plus square icon"></i>
+                </span>
+              </a>
+              {% endif %}
           </div>
         </div>
         {% endfor %}

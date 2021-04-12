@@ -36,3 +36,14 @@ class Message(db.Model):
                               primaryjoin=User.id == receiver)
     content = db.Column(db.String(140))
     seen = db.Column(db.Boolean)
+
+class Exchange(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    MyStampID=db.Column(db.Integer,db.ForeignKey('stamp.id',ondelete='CASCADE'))
+    OtherStampID=db.Column(db.Integer,db.ForeignKey('stamp.id',ondelete='CASCADE'))
+    #make sure we delete the exchange when stamps disappear
+    MyStampID_r = relationship(Stamp, backref=backref('Exchange sndr', cascade='all,delete'),
+                            primaryjoin=Stamp.id == MyStampID)
+    OtherStampID_r = relationship(Stamp, backref=backref('Exchange rcvr', cascade='all,delete'),
+                              primaryjoin=Stamp.id == OtherStampID)
+    
