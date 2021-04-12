@@ -324,7 +324,6 @@ def messaging():
 
     messages = messagesReceived+messagesSent
     messages.sort(key=lambda x: x["date"], reverse=True)
-    print(messages)
     return(render_template("messaging.html", messagesReceived=messagesReceived, messagesSent=messagesSent,
                            messages=messages))
 
