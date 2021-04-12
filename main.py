@@ -291,8 +291,9 @@ def AcceptExchange():
     hisStamp=Stamp.query.filter_by(id=exchange.receiverID).first()
     timestamp = datetime.datetime.now()
     if request.form['accept']=='yes':
-        myStamp.owner=exchange.receiverStampID
-        hisStamp.owner=exchange.senderStampID
+        myStamp.owner=exchange.senderStampID
+        hisStamp.owner=exchange.receiverStampID
+        db.session.commit()
     db.session.delete(exchange)
     db.session.commit()
     flash("Exchange finished")
