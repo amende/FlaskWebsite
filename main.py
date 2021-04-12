@@ -39,6 +39,7 @@ db.init_app(app)
 csrf = CSRFProtect()
 csrf.init_app(app)
 
+
 # Just for easier debug
 if os.getenv("debug"):
     with app.app_context():
@@ -285,18 +286,23 @@ def exchange():
 @app.route('/AcceptExchange',methods=['POST'])
 @login_required
 def AcceptExchange():
+    exchange=Exchange.query.filter_by(id=request.form["exchangeid"]).first()
+    myStamp=Stamp.query.filter_by(id=exchange.senderID).first()
+    hisStamp=Stamp.query.filter_by(id=exchange.receiverID).first()
+    timestamp = datetime.datetime.now()
     if request.form['accept']=='yes':
-        exchange=Exchange.query.filter_by(id=request.form["exchangeid"]).first()
-        myStamp=Stamp.query.filter_by(id=exchange.senderID).first()
-        hisStamp=Stamp.query.filter_by(id=exchange.receiverID).first()
         myStamp.owner=exchange.receiverStampID
         hisStamp.owner=exchange.senderStampID
-        db.session.delete(exchange)
-        db.session.commit()
-        flash("Exchange finished")
-        return(render_template('home.html',stampCount=Stamp.query.count()))
-    else:
-        return(render_template('notYet.html'))
+    db.session.delete(exchange)
+    db.session.commit()
+    flash("Exchange finished")
+    sender = current_user.id
+    seen = False
+    new_message = Message(timestamp=timestamp, sender=sender, receiver=exchange.senderID,
+                    content="I accepted your exchange" if request.form['accept']=='yes' else "your exchange was refused", seen=seen)
+    db.session.add(new_message)
+    db.session.commit()
+    return(render_template('home.html',stampCount=Stamp.query.count()))
 
 
 
