@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {% include "header.html" %}
+</head>
+<body>
+  {% include "navbar.html" %}
+  {% include "errors.html" %}
+  <div class="ui two column centered grid" style="margin-top: 2em;margin-bottom: 0.5em">
+    <div class="ui center aligned segment" style="width: content;">
+     <p style="text-weight:bold;">Do you want to send the exchange message ?
+        <br/>When the other user receives it he can validate or refuse.<br/>You will be notified in either case.
+       <form class="ui form" action="/confirmExchange" method='POST'>
+         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+         <input type="hidden" name=MyStamp value={{mystampid}}>
+         <input type="hidden" name=HisStamp value={{hisstampid}}>
+           <button class="ui submit red button" type="submit">Yes !</button>
+           <a href="/profile"><button class="ui blue button" type="button">No, go back</button></a>
+       </form>
+    </div>
+  </div>
+  {% include "footer.html" %}
+</body>
+</html>

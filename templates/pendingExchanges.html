@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {% include "header.html" %}
+</head>
+<body>
+  {% include "navbar.html" %}
+  {% include "errors.html" %}
+
+  <p>you can go check the exchangeable stamps <a href="/searchStamp">here</a></p>
+
+    <p>your pending exchanges:</p>
+
+    {% for exchange in exchanges %}
+    <p>you get : {{exchange.senderStampID}} for the stamp {{exchange.receiverStampID}}</p>
+    <form action="/AcceptExchange" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <input type="hidden" name="exchangeid" value="{{exchange.id}}">
+        <label> <i class="check icon"></i></label>
+        <input type="radio" name="accept" value="yes" required=required>
+        <label> <i class="close icon"></i></label>
+        <input type="radio" name="accept" value="no" required=required>
+        <button class="ui blue submit button" type="submit"> Send response </button>
+    </form>
+    {% endfor %}
+  {% include "footer.html" %}
+
+</body>
+</html>

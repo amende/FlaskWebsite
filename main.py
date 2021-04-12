@@ -9,7 +9,7 @@ import os
 import datetime
 
 # local files:
-from models import User, Stamp, db, Message
+from models import User, Stamp, db, Message, Exchange
 
 
 # Load environment variables
@@ -42,7 +42,7 @@ csrf.init_app(app)
 # Just for easier debug
 if os.getenv("debug"):
     with app.app_context():
-        # db.drop_all()
+        #db.drop_all()
         db.create_all()
 
 
@@ -278,9 +278,50 @@ def exchange():
         if hisStamp.isPublic:
             timbres = Stamp.query.filter_by(owner=current_user.id)
             return(render_template('exchange.html', timbres=timbres, hisStamp=hisStamp))
-    return(render_template('notYet.html'))
+    else:
+        exchanges=Exchange.query.filter_by(receiverID=current_user.id)
+        return(render_template('pendingExchanges.html',exchanges=exchanges))
+
+@app.route('/AcceptExchange',methods=['POST'])
+@login_required
+def AcceptExchange():
+    if request.form['accept']=='yes':
+        exchange=Exchange.query.filter_by(id=request.form["exchangeid"]).first()
+        myStamp=Stamp.query.filter_by(id=exchange.senderID).first()
+        hisStamp=Stamp.query.filter_by(id=exchange.receiverID).first()
+        myStamp.owner=exchange.receiverStampID
+        hisStamp.owner=exchange.senderStampID
+        db.session.delete(exchange)
+        db.session.commit()
+        flash("Exchange finished")
+        return(render_template('home.html',stampCount=Stamp.query.count()))
+    else:
+        return(render_template('notYet.html'))
 
 
+
+@app.route('/confirmExchange',methods=['GET','POST'])
+@login_required
+def confirmExchange():
+    if request.method=='GET':
+        mystampid=request.args.get("MyStamp")
+        hisstampid=request.args.get("HisStamp")
+        return(render_template('confirmExchange.html',mystampid=mystampid,hisstampid=hisstampid))
+    if request.method=='POST':
+        mystampid=request.form["MyStamp"]
+        hisstampid=request.form["HisStamp"]
+        hisStamp=Stamp.query.filter_by(id=int(hisstampid)).first()
+        myStamp=Stamp.query.filter_by(id=int(mystampid)).first()
+        idSender=current_user.id
+        idReceiver=hisStamp.owner
+        if hisStamp.isPublic:
+            new_exchange = Exchange(senderID=idSender, receiverID=idReceiver, receiverStampID=hisStamp.owner, senderStampID=myStamp.owner)
+            db.session.add(new_exchange)
+            db.session.commit()
+            flash("Exchange sent")
+        else:
+            flash("The stamp you want is not public or doesn't exist")
+        return(redirect(url_for("profile")))
 
 # Message
 @app.route('/messaging', methods=['GET', 'POST'])

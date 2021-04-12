@@ -10,34 +10,39 @@
     <div class="ui two column centered grid" style="margin-top: 2em;margin-bottom: 0.5em">
         <div class="ui center aligned segment" style="width: content;">
           <div class="ui internally celled grid">
-            <div class="row">
-                <h1>
-                    Select the stamp you want to exchange :
-                </h1>
-                {% for timbre in timbres %}
-                <div class="link item">
-                <div class="ui tiny image">
-                    <img src="{{ url_for('static', filename=timbre.fileName) }}">
-                </div>
-                <div class="content">
-                    <a class="header">{{ timbre.name }}</a>
-                    <div class="description">
-                    Un timbre de l'année {{ timbre.year }}
+            <form action=/confirmExchange method='GET'>
+                <div class="row">
+                    <h1>
+                        Select the stamp you want to exchange :
+                    </h1>
+                    {% for timbre in timbres %}
+                    <input type="radio" name="MyStamp" required="required" value="{{timbre.id}}">
+                    <div class="link item">
+                    <div class="ui tiny image">
+                        <img src="{{ url_for('static', filename=timbre.fileName) }}">
                     </div>
+                    <div class="content">
+                        <a class="header">{{ timbre.name }}</a>
+                        <div class="description">
+                        Un timbre de l'année {{ timbre.year }}
+                        </div>
+                    </div>
+                    </div>
+                    {% endfor %}
                 </div>
+                <div class="row">
+                    <h1>
+                        The stamp I want :O
+                    </h1>
+                    <div class="link item">
+                        <div class="ui tiny image">
+                            <img src="{{ url_for('static', filename=hisStamp.fileName) }}">
+                        </div>
+                    </div>
+                    <input type="hidden" name="HisStamp" value="{{hisStamp.id}}">
                 </div>
-                {% endfor %}
-            </div>
-            <div class="row">
-                <h1>
-                    The stamp I want :O
-                </h1>
-                <div class="link item">
-                <div class="ui tiny image">
-                    <img src="{{ url_for('static', filename=hisStamp.fileName) }}">
-                  </div>
-                </div>
-            </div>
+                <input type=submit >
+            </form>
         </div>
     </div>
 </div>
