@@ -30,8 +30,8 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 # CSP Policy
 csp = {
     'default-src': '\'self\' https://fonts.gstatic.com/ data: ',
-    'script-src': '\'self\' \'unsafe-inline\'',
-    'style-src': '\'self\' https://fonts.googleapis.com/ \'unsafe-inline\'',
+    'script-src': '\'self\'',
+    'style-src': '\'self\' https://fonts.googleapis.com/',
 }
 Talisman(app, content_security_policy=csp, content_security_policy_nonce_in=['style-src', 'script-src'])
 
