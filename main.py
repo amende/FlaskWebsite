@@ -61,7 +61,7 @@ csrf.init_app(app)
 # Just for easier debug
 if os.getenv("debug"):
     with app.app_context():
-        # db.drop_all()
+        #db.drop_all()
         db.create_all()
 
 
@@ -84,7 +84,8 @@ def home():
 @app.route('/profile')
 @login_required
 def profile():
-    return render_template('profile.html', stampsUploaded=Stamp.query.filter_by(owner=current_user.id).count())
+    return render_template('profile.html', stampsUploaded=Stamp.query.filter_by(owner=current_user.id).count(),
+                        stampsExchanged=Exchange.query.filter_by(senderID=current_user.id).count()+Exchange.query.filter_by(receiverID=current_user.id).count())
 
 
 @app.route('/signup')
@@ -174,7 +175,8 @@ def editProfile():
         flash("Successfully edited profile")
 
     db.session.commit()
-    return render_template('profile.html', stampsUploaded=Stamp.query.filter_by(owner=current_user.id).count())
+    return render_template('profile.html', stampsUploaded=Stamp.query.filter_by(owner=current_user.id).count(),
+                        stampsExchanged=Exchange.query.filter_by(senderID=current_user.id).count()+Exchange.query.filter_by(receiverID=current_user.id).count())
 
 
 @app.route('/deleteProfile', methods=['GET', 'POST'])
