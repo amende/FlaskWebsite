@@ -40,6 +40,8 @@ class Message(db.Model):
 
 class Exchange(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    answered = db.Column(db.Boolean)
+    accepted = db.Column(db.Boolean)
     senderID = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'))
     receiverID = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'))
     senderStampID = db.Column(db.Integer, db.ForeignKey('stamp.id', ondelete='CASCADE'))

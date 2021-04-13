@@ -85,8 +85,8 @@ def home():
 @login_required
 def profile():
     return render_template('profile.html', stampsUploaded=Stamp.query.filter_by(owner=current_user.id).count(),
-                           stampsExchanged=Exchange.query.filter_by(senderID=current_user.id).count()
-                           + Exchange.query.filter_by(receiverID=current_user.id).count())
+                           stampsExchanged=Exchange.query.filter_by(senderID=current_user.id, accepted=True).count()
+                           + Exchange.query.filter_by(receiverID=current_user.id, accepted=True).count())
 
 
 @app.route('/signup')
@@ -300,7 +300,7 @@ def exchange():
             stamps = Stamp.query.filter_by(owner=current_user.id, isPublic=True)
             return(render_template('exchange.html', stamps=stamps, hisStamp=hisStamp))
     else:
-        exchanges = Exchange.query.filter_by(receiverID=current_user.id)
+        exchanges = Exchange.query.filter_by(receiverID=current_user.id, answered=False)
         exchanges = [{"id": ex.id,
                       "senderName": User.query.filter_by(id=ex.senderID).first().name,
                       "stampSent": Stamp.query.filter_by(owner=ex.senderStampID).first(),
@@ -314,7 +314,9 @@ def exchange():
 def AcceptExchange():
     # validation
     if not(request.form['accept'] == 'yes' or request.form['accept'] == 'no')   \
-           or Exchange.query.filter_by(request.form["exchangeid"]).first().receiverID == current_user.id:
+           or 'exchangeid' not in request.form  \
+           or Exchange.query.filter_by(id=request.form["exchangeid"]).first().receiverID != current_user.id \
+           or Exchange.query.filter_by(id=request.form["exchangeid"]).first().answered:
         flash("Something went terribly wrong. Try again or report to the adminstrator.")
         return(redirect(url_for("exchange")))
     accepted = request.form['accept'] == 'yes'
@@ -325,6 +327,8 @@ def AcceptExchange():
     if accepted:
         myStamp.owner = exchange.senderStampID
         hisStamp.owner = exchange.receiverStampID
+        exchange.accpeted = True
+    exchange.answered = True
     db.session.commit()
     db.session.delete(exchange)
     flash("Exchange accepted" if accepted else "Exchange refused")
@@ -353,12 +357,12 @@ def confirmExchange():
         idSender = current_user.id
         idReceiver = hisStamp.owner
         if myStamp.isPublic and hisStamp.isPublic:
-            if not(Exchange.query.filter_by(senderStampID=myStamp.id).first()) \
-               and not(Exchange.query.filter_by(senderStampID=myStamp.id).first()):
-                if not(Exchange.query.filter_by(receiverStampID=myStamp.id).first()) \
-                   and not(Exchange.query.filter_by(receiverStampID=myStamp.id).first()):
+            if not(Exchange.query.filter_by(senderStampID=myStamp.id, answered=False).first()) \
+               and not(Exchange.query.filter_by(senderStampID=myStamp.id, answered=False).first()):
+                if not(Exchange.query.filter_by(receiverStampID=myStamp.id, answered=False).first()) \
+                   and not(Exchange.query.filter_by(receiverStampID=myStamp.id, answered=False).first()):
                     new_exchange = Exchange(senderID=idSender, receiverID=idReceiver, receiverStampID=hisStamp.owner,
-                                            senderStampID=myStamp.owner)
+                                            senderStampID=myStamp.owner, answered=False, accepted=False)
                     db.session.add(new_exchange)
                     db.session.commit()
                     flash("Exchange request sent")
