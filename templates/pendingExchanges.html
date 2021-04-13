@@ -30,7 +30,7 @@
             <tr>
               <td>
                 <h4 class="ui image header">
-                  <img class="ui rounded image" src="{{ url_for('static', filename=exchange["stampSent"].fileName) }}">
+                  <img class="ui rounded image" src="{{ url_for('static', filename=exchange['stampSent'].fileName) }}">
                   <div class="content">
                     {{ exchange["stampSent"].name }}
                     <div class="sub header">Printed in {{ exchange["stampSent"].year }}
@@ -39,7 +39,7 @@
                 </h4></td>
                 <td>
                   <h4 class="ui image header">
-                    <img class="ui small rounded image" src="{{ url_for('static', filename=exchange["stampReceived"].fileName) }}">
+                    <img class="ui small rounded image" src="{{ url_for('static', filename=exchange['stampReceived'].fileName) }}">
                     <div class="content">
                       {{ exchange["stampReceived"].name }}
                       <div class="sub header">Printed in {{ exchange["stampReceived"].year }}

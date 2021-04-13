@@ -304,8 +304,8 @@ def exchange():
         exchanges = Exchange.query.filter_by(receiverID=current_user.id, answered=False)
         exchanges = [{"id": ex.id,
                       "senderName": User.query.filter_by(id=ex.senderID).first().name,
-                      "stampSent": Stamp.query.filter_by(owner=ex.senderStampID).first(),
-                      "stampReceived": Stamp.query.filter_by(owner=ex.receiverStampID).first()}
+                      "stampSent": Stamp.query.filter_by(id=ex.senderStampID).first(),
+                      "stampReceived": Stamp.query.filter_by(id=ex.receiverStampID).first()}
                      for ex in exchanges]
         return(render_template('pendingExchanges.html', exchanges=exchanges))
 
