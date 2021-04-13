@@ -86,8 +86,8 @@ def home():
 @login_required
 def profile():
     return render_template('profile.html', stampsUploaded=Stamp.query.filter_by(owner=current_user.id).count(),
-                           stampsExchanged=Exchange.query.filter_by(senderID=current_user.id, accepted=True).count()
-                           + Exchange.query.filter_by(receiverID=current_user.id, accepted=True).count())
+                           stampsExchanged=Exchange.query.filter_by(senderID=current_user.id,accepted=True).count()
+                           + Exchange.query.filter_by(receiverID=current_user.id,accepted=True).count())
 
 
 @app.route('/signup')
@@ -178,8 +178,8 @@ def editProfile():
 
     db.session.commit()
     return render_template('profile.html', stampsUploaded=Stamp.query.filter_by(owner=current_user.id).count(),
-                           stampsExchanged=Exchange.query.filter_by(senderID=current_user.id).count()
-                           + Exchange.query.filter_by(receiverID=current_user.id).count())
+                           stampsExchanged=Exchange.query.filter_by(senderID=current_user.id,accepted=True).count()
+                           + Exchange.query.filter_by(receiverID=current_user.id,accepted=True).count())
 
 
 @app.route('/deleteProfile', methods=['GET', 'POST'])
