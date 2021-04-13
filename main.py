@@ -61,7 +61,7 @@ csrf.init_app(app)
 # Just for easier debug
 if os.getenv("debug"):
     with app.app_context():
-        #db.drop_all()
+        # db.drop_all()
         db.create_all()
 
 
@@ -312,6 +312,11 @@ def exchange():
 @app.route('/AcceptExchange', methods=['POST'])
 @login_required
 def AcceptExchange():
+    # validation
+    if not(request.form['accept'] == 'yes' or request.form['accept'] == 'no')   \
+           or Exchange.query.filter_by(request.form["exchangeid"]).first().receiverID == current_user.id:
+        flash("Something went terribly wrong. Try again or report to the adminstrator.")
+        return(redirect(url_for("exchange")))
     accepted = request.form['accept'] == 'yes'
     exchange = Exchange.query.filter_by(id=request.form["exchangeid"]).first()
     myStamp = Stamp.query.filter_by(id=exchange.senderID).first()
@@ -347,14 +352,22 @@ def confirmExchange():
         myStamp = Stamp.query.filter_by(id=int(mystampid)).first()
         idSender = current_user.id
         idReceiver = hisStamp.owner
-        if hisStamp.isPublic:
-            new_exchange = Exchange(senderID=idSender, receiverID=idReceiver, receiverStampID=hisStamp.owner,
-                                    senderStampID=myStamp.owner)
-            db.session.add(new_exchange)
-            db.session.commit()
-            flash("Exchange request sent")
+        if myStamp.isPublic and hisStamp.isPublic:
+            if not(Exchange.query.filter_by(senderStampID=myStamp.id).first()) \
+               and not(Exchange.query.filter_by(senderStampID=myStamp.id).first()):
+                if not(Exchange.query.filter_by(receiverStampID=myStamp.id).first()) \
+                   and not(Exchange.query.filter_by(receiverStampID=myStamp.id).first()):
+                    new_exchange = Exchange(senderID=idSender, receiverID=idReceiver, receiverStampID=hisStamp.owner,
+                                            senderStampID=myStamp.owner)
+                    db.session.add(new_exchange)
+                    db.session.commit()
+                    flash("Exchange request sent")
+                else:
+                    flash("The stamp you want is already part of a pending exchange.")
+            else:
+                flash("The stamp you want to give is already part of a pending exchange.")
         else:
-            flash("The stamp you want is not public or doesn't exist")
+            flash("Either the stamp you give or the one you want is not public or doesn't exist")
         return(redirect(url_for("profile")))
 
 
