@@ -331,7 +331,6 @@ def AcceptExchange():
         exchange.accpeted = True
     exchange.answered = True
     db.session.commit()
-    db.session.delete(exchange)
     flash("Exchange accepted" if accepted else "Exchange refused")
     sender = current_user.id
     seen = False
