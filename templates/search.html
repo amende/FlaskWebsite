@@ -32,7 +32,7 @@
 
       <div class="ui divided items">
 
-        {% for stamp in stamps %}
+        {% for (stamp,owner) in stamps %}
         <div class="link item">
           <div class="ui tiny image">
             <img src="{{ url_for('static', filename=stamp.fileName) }}">
@@ -41,6 +41,8 @@
             <a class="header">{{ stamp.name }}</a>
             <div class="description">
               Printed in {{ stamp.year }}
+              <br/>
+              Owned by {{owner}}
             </div>
           </div>
           <div class="content">

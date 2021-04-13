@@ -273,6 +273,8 @@ def addStamp():
 def searchStamp():
     if request.method == 'GET':
         stamps = Stamp.query.filter_by(isPublic=True).limit(50)
+        stamps = [(stamp,User.query.filter_by(id=stamp.owner).first().name) for stamp in stamps]
+
         return(render_template("search.html", stamps=stamps))
     if request.method == 'POST':
         min_year = request.form.get('min_year')
@@ -288,6 +290,9 @@ def searchStamp():
         stamps = Stamp.query.filter(Stamp.name.ilike('%'+name+'%'))   \
                             .filter(Stamp.year >= min_year, Stamp.year <= max_year)   \
                             .filter_by(isPublic=True).limit(50)
+
+        stamps = [(stamp,User.query.filter_by(id=stamp.owner).first().name) for stamp in stamps]
+
         return(render_template("search.html", stamps=stamps))
 
 
@@ -307,6 +312,7 @@ def exchange():
                       "stampSent": Stamp.query.filter_by(id=ex.senderStampID).first(),
                       "stampReceived": Stamp.query.filter_by(id=ex.receiverStampID).first()}
                      for ex in exchanges]
+        print(exchanges)
         return(render_template('pendingExchanges.html', exchanges=exchanges))
 
 
@@ -322,13 +328,13 @@ def AcceptExchange():
         return(redirect(url_for("exchange")))
     accepted = request.form['accept'] == 'yes'
     exchange = Exchange.query.filter_by(id=request.form["exchangeid"]).first()
-    myStamp = Stamp.query.filter_by(id=exchange.senderID).first()
-    hisStamp = Stamp.query.filter_by(id=exchange.receiverID).first()
+    myStamp = Stamp.query.filter_by(id=exchange.receiverStampID).first()
+    hisStamp = Stamp.query.filter_by(id=exchange.senderStampID).first()
     timestamp = datetime.datetime.now()
     if accepted:
-        myStamp.owner = exchange.senderStampID
-        hisStamp.owner = exchange.receiverStampID
-        exchange.accpeted = True
+        myStamp.owner = exchange.senderID
+        hisStamp.owner = exchange.receiverID
+        exchange.accepted = True
     exchange.answered = True
     db.session.commit()
     flash("Exchange accepted" if accepted else "Exchange refused")
@@ -361,8 +367,8 @@ def confirmExchange():
                and not(Exchange.query.filter_by(senderStampID=myStamp.id, answered=False).first()):
                 if not(Exchange.query.filter_by(receiverStampID=myStamp.id, answered=False).first()) \
                    and not(Exchange.query.filter_by(receiverStampID=myStamp.id, answered=False).first()):
-                    new_exchange = Exchange(senderID=idSender, receiverID=idReceiver, receiverStampID=hisStamp.owner,
-                                            senderStampID=myStamp.owner, answered=False, accepted=False)
+                    new_exchange = Exchange(senderID=idSender, receiverID=idReceiver, receiverStampID=hisStamp.id,
+                                            senderStampID=myStamp.id, answered=False, accepted=False)
                     db.session.add(new_exchange)
                     db.session.commit()
                     flash("Exchange request sent")
