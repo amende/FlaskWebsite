@@ -2,3 +2,6 @@ Flask
 Flask-Login
 Flask-SQLAlchemy
 python-dotenv
+bcrypt
+flask_wtf
+flask_talisman
