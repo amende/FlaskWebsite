@@ -14,7 +14,11 @@ RUN pip3 install --upgrade pip
 
 RUN pip3 install -r requirements.txt
 
-RUN pip3 freeze
+COPY .env.template .env
+
+RUN key=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+
+RUN sed -i "s/pleasereplacebyrandomshit/${key}/" .env
 
 COPY . /app
 
